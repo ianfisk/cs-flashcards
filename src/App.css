@@ -1,18 +1,7 @@
-.App {
-	text-align: center;
-}
-
-.App-header {
-	background-color: #222;
-	height: 150px;
-	padding: 20px;
-	color: white;
-}
-
-.App-title {
-	font-size: 1.5em;
-}
-
-.App-intro {
-	font-size: large;
+.app-container {
+	align-items: center;
+	display: flex;
+	font-size: 20px;
+	height: 100vh;
+	justify-content: center;
 }

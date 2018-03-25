@@ -1,20 +1,31 @@
 import React, { PureComponent } from 'react';
+import { ClimbingBoxLoader } from 'react-spinners';
+import Flashcard from './components/flash-card';
 import shuffle from './utility/shuffle';
 import { flashcardStatus } from './constants';
 import { flashcardManager, stateManager } from './flashcard-db';
 import './App.css';
 
-class App extends PureComponent {
+export default class App extends PureComponent {
 	state = {
 		flashcards: null,
+		indexOfCurrentFlashcard: 0,
+		indexOfNextReviewCard: 0,
 	};
 
 	componentDidMount() {
-		this.initializeFlashcards();
+		this.initializeState();
 	}
 
-	async initializeFlashcards() {
-		const [shuffledFlashcardIds, savedFlashcards] = await Promise.all([
+	async initializeState() {
+		const [
+			currentFlashcardId,
+			nextReviewCardId,
+			shuffledFlashcardIds,
+			savedFlashcards
+		] = await Promise.all([
+			stateManager.getCurrentFlashcardId(),
+			stateManager.getNextReviewCardId(),
 			stateManager.getShuffledFlashcardIds(),
 			flashcardManager.getFlashcards()
 		]);
@@ -22,17 +33,49 @@ class App extends PureComponent {
 		const shuffledFlashcards = shuffledFlashcardIds.length && savedFlashcards.length
 			? shuffleSavedFlashcards(savedFlashcards, shuffledFlashcardIds)
 			: await getAndSaveFlashcards();
+
+		const indexOfCurrentFlashcard = shuffledFlashcards.findIndex(x => x.id === currentFlashcardId);
+		const indexOfNextReviewCard = shuffledFlashcards.findIndex(x => x.id === nextReviewCardId);
+		this.setState({
+			flashcards: shuffledFlashcards,
+			indexOfCurrentFlashcard: indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0,
+			indexOfNextReviewCard: indexOfNextReviewCard !== -1 ? indexOfNextReviewCard : 0,
+		});
 	}
 
+	handleGoToNextCard = () => {
+		this.setState(prevState => ({
+			indexOfCurrentFlashcard: (prevState.indexOfCurrentFlashcard + 1) % prevState.flashcards.length
+		}));
+	};
+
+	updateCard = card => {
+		flashcardManager.putFlashcard(card);
+
+		this.setState(prevState => {
+			const { flashcards } = prevState;
+			const updatedCards = [...flashcards];
+			const cardIndex = updatedCards.findIndex(x => x.id === card.id);
+			updatedCards[cardIndex] = card;
+
+			return { flashcards: updatedCards };
+		});
+	};
+
 	render() {
+		const { flashcards, indexOfCurrentFlashcard } = this.state;
+		const isLoading = !flashcards || !flashcards.length;
+
 		return (
-			<div className="App">
-				<header className="App-header">
-					<h1 className="App-title">Welcome to React</h1>
-				</header>
-				<p className="App-intro">
-					To get started, edit <code>src/App.js</code> and save to reload.
-				</p>
+			<div className="app-container">
+				<ClimbingBoxLoader color="#36D7B7" loading={isLoading} />
+				{!isLoading &&
+					<Flashcard
+						id={flashcards[indexOfCurrentFlashcard].id}
+						card={flashcards[indexOfCurrentFlashcard]}
+						onGoToNextCard={this.handleGoToNextCard}
+						updateCard={this.updateCard}
+					/>}
 			</div>
 		);
 	}
@@ -58,5 +101,3 @@ async function getAndSaveFlashcards() {
 	await stateManager.setShuffledFlashcardIds(shuffledFlashcards.map(x => x.id));
 	return shuffledFlashcards;
 }
-
-export default App;

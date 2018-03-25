@@ -1,0 +1,52 @@
+.flashcard-container {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: center;
+	width: 100%;
+}
+
+.flashcard-content-container {
+	border: 0.5px solid lightgray;
+	border-radius: 3px;
+	display: flex;
+	height: 80%;
+	margin-bottom: 12px;
+	overflow: scroll;
+	padding: 12px;
+	width: 85%;
+}
+
+.flashcard-content {
+	margin: auto;
+}
+
+.action-button-margin {
+	margin: 4px;
+}
+
+.action-button-container {
+	display: flex;
+}
+
+.status-button {
+	min-width: 110px;
+}
+
+.status-dropdown-container {
+	background: white;
+	border: 0.5px solid lightgray;
+	border-radius: 3px;
+	font-size: 14px;
+	width: 120px;
+}
+
+.status-dropdown-item {
+	padding: 4px 16px;
+	width: 100%;
+}
+
+.status-dropdown-item:hover {
+	background: lightgray;
+}

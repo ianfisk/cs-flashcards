@@ -1,5 +1,4 @@
 import idb from 'idb';
-import { flashcardStatus } from './constants';
 
 // Each flashcard in the flashcards object store should have the shape
 // {
@@ -27,7 +26,7 @@ export const flashcardManager = {
 		const tx = db.transaction('flashcards');
 		const store = tx.objectStore('flashcards');
 
-		return getValuesFromCursor(tx, store, card => card.status !== flashcardStatus.dontShow);
+		return getValuesFromCursor(tx, store);
 	},
 
 	async getFlashcardsWithStatus(status) {
@@ -76,7 +75,7 @@ export const stateManager = {
 	},
 };
 
-async function getValuesFromCursor(tx, objectWithCursor, shouldAddValue) {
+async function getValuesFromCursor(tx, objectWithCursor, shouldAddValue = () => true) {
 	const values = [];
 	objectWithCursor.iterateCursor(cursor => {
 		if (!cursor) return;
