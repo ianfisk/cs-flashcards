@@ -10,12 +10,15 @@ import { flashcardStatus } from './constants';
 import { flashcardManager, stateManager } from './flashcard-db';
 import './App.css';
 
+const initialState = {
+	flashcards: null,
+	indexOfCurrentFlashcard: 0,
+	indexOfNextReviewCard: 0,
+	isLoading: true,
+};
+
 export default class App extends PureComponent {
-	state = {
-		flashcards: null,
-		indexOfCurrentFlashcard: 0,
-		indexOfNextReviewCard: 0,
-	};
+	state = initialState;
 
 	componentDidMount() {
 		this.initializeState();
@@ -57,6 +60,18 @@ export default class App extends PureComponent {
 		this.setState(prevState => ({
 			indexOfCurrentFlashcard: getPreviousFlashcardIndex(prevState.flashcards, prevState.indexOfCurrentFlashcard),
 		}));
+	};
+
+	handleRefreshCards = async e => {
+		e.preventDefault();
+		await Promise.all([
+			flashcardManager.clearAll(),
+			stateManager.setCurrentFlashcardId(null),
+			stateManager.setNextReviewCard(null),
+			stateManager.setShuffledFlashcardIds(null),
+		]);
+
+		this.setState(initialState, this.initializeState);
 	};
 
 	updateCard = card => {
