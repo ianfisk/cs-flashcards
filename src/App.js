@@ -102,8 +102,10 @@ export default class App extends PureComponent {
 		return (
 			<React.Fragment>
 				<div><Link to="/">Home</Link></div>
+				<div><Link to="/known">Known cards</Link></div>
+				<div><Link to="/unknown">Unknown cards</Link></div>
 				<div><Link to="/hidden">Hidden cards</Link></div>
-				<div><Link to="/reviewSoon">Cards to review soon</Link></div>
+				<div><Link to="/reviewSoon">Cards to review</Link></div>
 				<Divider />
 				<button className="btn btn-danger refresh-button" onClick={this.handleRefreshCards}>Reset</button>
 			</React.Fragment>
@@ -160,6 +162,24 @@ export default class App extends PureComponent {
 								}}
 							/>
 							<Route
+								path="/known"
+								render={() => (
+									<CardList
+										header="Known cards"
+										cards={flashcards.filter(x => x.status === flashcardStatus.known)}
+									/>
+								)}
+							/>
+							<Route
+								path="/unknown"
+								render={() => (
+									<CardList
+										header="Unknown cards"
+										cards={flashcards.filter(x => x.status === flashcardStatus.unknown)}
+									/>
+								)}
+							/>
+							<Route
 								path="/hidden"
 								render={() => (
 									<CardList
@@ -172,7 +192,7 @@ export default class App extends PureComponent {
 								path="/reviewSoon"
 								render={() => (
 									<CardList
-										header="Cards to review soon"
+										header="Cards to review"
 										cards={flashcards.filter(x => x.status === flashcardStatus.reviewSoon)}
 									/>
 								)}
