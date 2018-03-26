@@ -5,6 +5,8 @@
 	font-size: 20px;
 	height: 100vh;
 	justify-content: center;
+	max-height: 600px;
+	overflow: hidden;
 	padding: 62px 12px 12px;
 	position: relative;
 }
@@ -27,7 +29,7 @@
 
 .menu-container {
 	background: white;
-	border: 0.5px solid lightgray;
+	border: 1px solid lightgray;
 	border-radius: 3px;
 	margin-top: 4px;
 	padding: 4px 20px;

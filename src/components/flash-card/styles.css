@@ -8,10 +8,10 @@
 }
 
 .flashcard-content-container {
-	border: 0.5px solid lightgray;
+	border: 1px solid lightgray;
 	border-radius: 3px;
 	display: flex;
-	height: 80%;
+	height: 70%;
 	margin-bottom: 12px;
 	overflow: scroll;
 	padding: 12px;
