@@ -21,33 +21,3 @@
 .flashcard-content {
 	margin: auto;
 }
-
-.action-button-margin {
-	margin: 4px;
-}
-
-.action-button-container {
-	display: flex;
-}
-
-.status-button {
-	min-height: 40px;
-	min-width: 110px;
-}
-
-.status-dropdown-container {
-	background: white;
-	border: 0.5px solid lightgray;
-	border-radius: 3px;
-	font-size: 14px;
-	width: 120px;
-}
-
-.status-dropdown-item {
-	padding: 4px 16px;
-	width: 100%;
-}
-
-.status-dropdown-item:hover {
-	background: lightgray;
-}
