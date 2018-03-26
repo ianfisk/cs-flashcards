@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { HashRouter as Router, Route, Link } from 'react-router-dom';
 import { SyncLoader } from 'react-spinners';
 import IoNaviconRound from 'react-icons/lib/io/navicon-round';
 import DropdownButton from './components/dropdown-button';
