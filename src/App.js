@@ -51,15 +51,27 @@ export default class App extends PureComponent {
 	}
 
 	handleGoToNextCard = () => {
-		this.setState(prevState => ({
-			indexOfCurrentFlashcard: getNextFlashcardIndex(prevState.flashcards, prevState.indexOfCurrentFlashcard),
-		}));
+		this.setState(prevState => {
+			const { flashcards, indexOfCurrentFlashcard } = prevState;
+			const nextIndex = getNextFlashcardIndex(flashcards, indexOfCurrentFlashcard + 1);
+			stateManager.setCurrentFlashcardId(flashcards[nextIndex].id);
+
+			return {
+				indexOfCurrentFlashcard: nextIndex,
+			};
+		});
 	};
 
 	handleGoToPreviousCard = () => {
-		this.setState(prevState => ({
-			indexOfCurrentFlashcard: getPreviousFlashcardIndex(prevState.flashcards, prevState.indexOfCurrentFlashcard),
-		}));
+		this.setState(prevState => {
+			const { flashcards, indexOfCurrentFlashcard } = prevState;
+			const previousIndex = getPreviousFlashcardIndex(flashcards, indexOfCurrentFlashcard - 1);
+			stateManager.setCurrentFlashcardId(flashcards[previousIndex].id);
+
+			return {
+				indexOfCurrentFlashcard: previousIndex,
+			};
+		});
 	};
 
 	handleRefreshCards = async e => {
@@ -173,27 +185,32 @@ async function getAndSaveFlashcards() {
 }
 
 function getNextFlashcardIndex(flashcards, startIndex) {
-	let flashcardIndex = startIndex;
+	let flashcardIndex = startIndex % flashcards.length;
 	for (let i = 1; i < flashcards.length; i++) {
-		flashcardIndex = (flashcardIndex + 1) % flashcards.length;
 		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
 			break;
 		}
+
+		flashcardIndex = (flashcardIndex + 1) % flashcards.length;
 	}
 
 	return flashcardIndex;
 }
 
 function getPreviousFlashcardIndex(flashcards, startIndex) {
+	if (startIndex < 0) {
+		startIndex = flashcards.length - 1;
+	}
+
 	let flashcardIndex = startIndex;
 	for (let i = 1; i < flashcards.length; i++) {
+		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
+			break;
+		}
+
 		flashcardIndex -= 1;
 		if (flashcardIndex < 0) {
 			flashcardIndex = flashcards.length - 1;
-		}
-
-		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
-			break;
 		}
 	}
 
