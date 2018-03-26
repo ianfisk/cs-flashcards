@@ -1,0 +1,30 @@
+.card-list {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
+.card-list-container {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	margin-bottom: 12px;
+	overflow: scroll;
+	padding: 12px 0;
+	overflow-x: hidden;
+	width: 100%;
+}
+
+.card-preview {
+	border: 0.5px solid lightgray;
+	border-radius: 3px;
+	color: black;
+	font-size: 14px;
+	min-height: 40px;
+	margin-bottom: 8px;
+	padding: 10px 8px 8px;
+	width: 85%;
+}

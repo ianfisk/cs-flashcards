@@ -5,6 +5,7 @@ import IoNaviconRound from 'react-icons/lib/io/navicon-round';
 import DropdownButton from './components/dropdown-button';
 import Flashcard from './components/flash-card';
 import Divider from './components/divider';
+import CardList from './components/card-list';
 import shuffle from './utility/shuffle';
 import { flashcardStatus } from './constants';
 import { flashcardManager, stateManager } from './flashcard-db';
@@ -12,7 +13,7 @@ import './App.css';
 
 const initialState = {
 	flashcards: null,
-	indexOfCurrentFlashcard: 0,
+	currentFlashcard: 0,
 	indexOfNextReviewCard: 0,
 	isLoading: true,
 };
@@ -45,32 +46,30 @@ export default class App extends PureComponent {
 		const indexOfNextReviewCard = shuffledFlashcards.findIndex(x => x.id === nextReviewCardId);
 		this.setState({
 			flashcards: shuffledFlashcards,
-			indexOfCurrentFlashcard: getNextFlashcardIndex(shuffledFlashcards, indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0),
+			currentFlashcard: getNextFlashcard(shuffledFlashcards, indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0),
 			indexOfNextReviewCard: indexOfNextReviewCard !== -1 ? indexOfNextReviewCard : 0,
 		});
 	}
 
 	handleGoToNextCard = () => {
 		this.setState(prevState => {
-			const { flashcards, indexOfCurrentFlashcard } = prevState;
-			const nextIndex = getNextFlashcardIndex(flashcards, indexOfCurrentFlashcard + 1);
-			stateManager.setCurrentFlashcardId(flashcards[nextIndex].id);
+			const { flashcards, currentFlashcard } = prevState;
+			const nextFlashcard = getNextFlashcard(flashcards, flashcards.findIndex(x => x.id === currentFlashcard.id) + 1);
 
-			return {
-				indexOfCurrentFlashcard: nextIndex,
-			};
+			stateManager.setCurrentFlashcardId(nextFlashcard.id);
+
+			return { currentFlashcard: nextFlashcard };
 		});
 	};
 
 	handleGoToPreviousCard = () => {
 		this.setState(prevState => {
-			const { flashcards, indexOfCurrentFlashcard } = prevState;
-			const previousIndex = getPreviousFlashcardIndex(flashcards, indexOfCurrentFlashcard - 1);
-			stateManager.setCurrentFlashcardId(flashcards[previousIndex].id);
+			const { flashcards, currentFlashcard } = prevState;
+			const previousFlashcard = getPreviousFlashcard(flashcards, flashcards.findIndex(x => x.id === currentFlashcard.id) - 1);
 
-			return {
-				indexOfCurrentFlashcard: previousIndex,
-			};
+			stateManager.setCurrentFlashcardId(previousFlashcard.id);
+
+			return { currentFlashcard: previousFlashcard };
 		});
 	};
 
@@ -95,7 +94,7 @@ export default class App extends PureComponent {
 			const cardIndex = updatedCards.findIndex(x => x.id === card.id);
 			updatedCards[cardIndex] = card;
 
-			return { flashcards: updatedCards };
+			return { flashcards: updatedCards, currentFlashcard: card };
 		});
 	};
 
@@ -112,7 +111,7 @@ export default class App extends PureComponent {
 	};
 
 	render() {
-		const { flashcards, indexOfCurrentFlashcard } = this.state;
+		const { flashcards, currentFlashcard } = this.state;
 		const isLoading = !flashcards || !flashcards.length;
 
 		return (
@@ -136,8 +135,8 @@ export default class App extends PureComponent {
 								path="/"
 								render={() => (
 									<Flashcard
-										id={flashcards[indexOfCurrentFlashcard].id}
-										card={flashcards[indexOfCurrentFlashcard]}
+										id={currentFlashcard.id}
+										card={currentFlashcard}
 										onGoToNextCard={this.handleGoToNextCard}
 										onGoToPreviousCard={this.handleGoToPreviousCard}
 										updateCard={this.updateCard}
@@ -145,15 +144,37 @@ export default class App extends PureComponent {
 								)}
 							/>
 							<Route
+								exact
+								path="/card/:cardId"
+								render={({ match }) => {
+									const cardId = parseInt(match.params.cardId, 10);
+									const card = flashcards.find(x => x.id === cardId);
+
+									return card ? (
+										<Flashcard
+											id={card.id}
+											card={card}
+											updateCard={this.updateCard}
+										/>
+									) : <div>Card not found</div>;
+								}}
+							/>
+							<Route
 								path="/hidden"
 								render={() => (
-									<div>hidden</div>
+									<CardList
+										header="Hidden cards"
+										cards={flashcards.filter(x => x.status === flashcardStatus.dontShow)}
+									/>
 								)}
 							/>
 							<Route
 								path="/reviewSoon"
 								render={() => (
-									<div>review soon</div>
+									<CardList
+										header="Cards to review soon"
+										cards={flashcards.filter(x => x.status === flashcardStatus.reviewSoon)}
+									/>
 								)}
 							/>
 						</React.Fragment>}
@@ -184,7 +205,9 @@ async function getAndSaveFlashcards() {
 	return shuffledFlashcards;
 }
 
-function getNextFlashcardIndex(flashcards, startIndex) {
+// Search from startIndex (inclusive) to the end of the array for the first card
+// that is not hidden. Loop to the front if necessary.
+function getNextFlashcard(flashcards, startIndex) {
 	let flashcardIndex = startIndex % flashcards.length;
 	for (let i = 1; i < flashcards.length; i++) {
 		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
@@ -194,10 +217,12 @@ function getNextFlashcardIndex(flashcards, startIndex) {
 		flashcardIndex = (flashcardIndex + 1) % flashcards.length;
 	}
 
-	return flashcardIndex;
+	return flashcards[flashcardIndex];
 }
 
-function getPreviousFlashcardIndex(flashcards, startIndex) {
+// Search from startIndex (inclusive) to the beginning of the array for the first card
+// that is not hidden. Loop to the end if necessary.
+function getPreviousFlashcard(flashcards, startIndex) {
 	if (startIndex < 0) {
 		startIndex = flashcards.length - 1;
 	}
@@ -214,5 +239,5 @@ function getPreviousFlashcardIndex(flashcards, startIndex) {
 		}
 	}
 
-	return flashcardIndex;
+	return flashcards[flashcardIndex];
 }

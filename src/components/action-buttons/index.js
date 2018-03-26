@@ -16,11 +16,11 @@ const flashcardStatusLabel = {
 
 export default class ActionButtons extends PureComponent {
 	static propTypes = {
-		onGoToNextCard: PropTypes.func.isRequired,
-		onGoToPreviousCard: PropTypes.func.isRequired,
 		onFlipCard: PropTypes.func.isRequired,
 		updateCardStatus: PropTypes.func.isRequired,
 		cardStatus: PropTypes.string,
+		onGoToNextCard: PropTypes.func,
+		onGoToPreviousCard: PropTypes.func,
 	};
 
 	renderStatusDropdown = () => {
@@ -56,9 +56,10 @@ export default class ActionButtons extends PureComponent {
 
 		return (
 			<div className="action-button-container">
-				<button className="btn btn-primary action-button-margin" onClick={onGoToPreviousCard}>
-					<GoArrowLeft size={24} />
-				</button>
+				{onGoToPreviousCard ?
+					<button className="btn btn-primary action-button-margin" onClick={onGoToPreviousCard}>
+						<GoArrowLeft size={24} />
+					</button> : null}
 				<button className="btn btn-primary action-button-margin" onClick={onFlipCard}>
 					<IoArrowSwap size={24} />
 				</button>
@@ -70,9 +71,10 @@ export default class ActionButtons extends PureComponent {
 				>
 					{flashcardStatusLabel[cardStatus] || 'Set status'}
 				</DropdownButton>
-				<button className="btn btn-primary action-button-margin" onClick={onGoToNextCard}>
-					<GoArrowRight size={24} />
-				</button>
+				{onGoToNextCard ?
+					<button className="btn btn-primary action-button-margin" onClick={onGoToNextCard}>
+						<GoArrowRight size={24} />
+					</button> : null}
 			</div>
 		);
 	}

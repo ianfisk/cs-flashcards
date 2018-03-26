@@ -1,19 +1,15 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ActionButtons from '../action-buttons';
+import { flashcardPropTypes } from '../../constants';
 import './styles.css';
 
 export default class Flashcard extends PureComponent {
 	static propTypes = {
-		card: PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			front: PropTypes.string.isRequired,
-			back: PropTypes.string.isRequired,
-			status: PropTypes.string,
-		}).isRequired,
-		onGoToNextCard: PropTypes.func.isRequired,
-		onGoToPreviousCard: PropTypes.func.isRequired,
+		card: flashcardPropTypes,
 		updateCard: PropTypes.func.isRequired,
+		onGoToNextCard: PropTypes.func,
+		onGoToPreviousCard: PropTypes.func,
 	};
 
 	state = {
