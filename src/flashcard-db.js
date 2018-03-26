@@ -47,6 +47,16 @@ export const flashcardManager = {
 
 		return tx.complete;
 	},
+
+	async clearAll() {
+		const db = await dbPromise;
+		const tx = db.transaction('flashcards', 'readwrite');
+		const store = tx.objectStore('flashcards');
+
+		store.clear();
+
+		return tx.complete;
+	}
 };
 
 export const stateManager = {

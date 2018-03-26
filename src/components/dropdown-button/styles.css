@@ -9,3 +9,7 @@
 .dropdown-container-above {
 	bottom: 100%;
 }
+
+.dropdown-container-left {
+	right: 0;
+}

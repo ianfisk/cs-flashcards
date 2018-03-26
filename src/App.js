@@ -1,6 +1,10 @@
 import React, { PureComponent } from 'react';
-import { ClimbingBoxLoader } from 'react-spinners';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { SyncLoader } from 'react-spinners';
+import IoNaviconRound from 'react-icons/lib/io/navicon-round';
+import DropdownButton from './components/dropdown-button';
 import Flashcard from './components/flash-card';
+import Divider from './components/divider';
 import shuffle from './utility/shuffle';
 import { flashcardStatus } from './constants';
 import { flashcardManager, stateManager } from './flashcard-db';
@@ -68,22 +72,66 @@ export default class App extends PureComponent {
 		});
 	};
 
+	renderMenu = () => {
+		return (
+			<React.Fragment>
+				<div><Link to="/">Home</Link></div>
+				<div><Link to="/hidden">Hidden cards</Link></div>
+				<div><Link to="/reviewSoon">Cards to review soon</Link></div>
+				<Divider />
+				<button className="btn btn-danger refresh-button" onClick={this.handleRefreshCards}>Reset</button>
+			</React.Fragment>
+		);
+	};
+
 	render() {
 		const { flashcards, indexOfCurrentFlashcard } = this.state;
 		const isLoading = !flashcards || !flashcards.length;
 
 		return (
-			<div className="app-container">
-				<ClimbingBoxLoader color="#36D7B7" loading={isLoading} />
-				{!isLoading &&
-					<Flashcard
-						id={flashcards[indexOfCurrentFlashcard].id}
-						card={flashcards[indexOfCurrentFlashcard]}
-						onGoToNextCard={this.handleGoToNextCard}
-						onGoToPreviousCard={this.handleGoToPreviousCard}
-						updateCard={this.updateCard}
-					/>}
-			</div>
+			<Router>
+				<div className="app-container">
+					<SyncLoader color="#36D7B7" loading={isLoading} />
+					{!isLoading &&
+						<React.Fragment>
+							<div className="menu-button-container">
+								<DropdownButton
+									className="btn btn-default menu-button"
+									dropdownContainerClassName="menu-container"
+									renderDropdownContents={this.renderMenu}
+									horizontalPosition="left"
+								>
+									<IoNaviconRound size={30} />
+								</DropdownButton>
+							</div>
+							<Route
+								exact
+								path="/"
+								render={() => (
+									<Flashcard
+										id={flashcards[indexOfCurrentFlashcard].id}
+										card={flashcards[indexOfCurrentFlashcard]}
+										onGoToNextCard={this.handleGoToNextCard}
+										onGoToPreviousCard={this.handleGoToPreviousCard}
+										updateCard={this.updateCard}
+									/>
+								)}
+							/>
+							<Route
+								path="/hidden"
+								render={() => (
+									<div>hidden</div>
+								)}
+							/>
+							<Route
+								path="/reviewSoon"
+								render={() => (
+									<div>review soon</div>
+								)}
+							/>
+						</React.Fragment>}
+				</div>
+			</Router>
 		);
 	}
 }
