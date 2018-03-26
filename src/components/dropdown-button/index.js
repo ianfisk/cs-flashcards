@@ -15,10 +15,27 @@ export default class DropdownButton extends PureComponent {
 		showDropdown: false,
 	};
 
+	componentDidUpdate(prevProps, prevState) {
+		if (!prevState.showDropdown && this.state.showDropdown) {
+			document.addEventListener('click', this.handleDocumentClick);
+		} else if (!this.state.showDropdown) {
+			document.removeEventListener('click', this.handleDocumentClick);
+		}
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('click', this.handleDocumentClick);
+	}
+
 	handleClick = e => {
 		e.preventDefault();
 		this.setState(prevState => ({ showDropdown: !prevState.showDropdown }));
 		if (this.props.onClick) this.props.onClick(e);
+	};
+
+	handleDocumentClick = e => {
+		e.preventDefault();
+		this.setState({ showDropdown: false });
 	};
 
 	render() {
