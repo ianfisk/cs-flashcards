@@ -49,6 +49,14 @@ export default class App extends PureComponent {
 		}));
 	};
 
+	handleGoToPreviousCard = () => {
+		this.setState(prevState => ({
+			indexOfCurrentFlashcard: prevState.indexOfCurrentFlashcard === 0
+				? prevState.flashcards.length - 1
+				: prevState.indexOfCurrentFlashcard - 1,
+		}));
+	};
+
 	updateCard = card => {
 		flashcardManager.putFlashcard(card);
 
@@ -74,6 +82,7 @@ export default class App extends PureComponent {
 						id={flashcards[indexOfCurrentFlashcard].id}
 						card={flashcards[indexOfCurrentFlashcard]}
 						onGoToNextCard={this.handleGoToNextCard}
+						onGoToPreviousCard={this.handleGoToPreviousCard}
 						updateCard={this.updateCard}
 					/>}
 			</div>

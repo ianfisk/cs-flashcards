@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import GoArrowLeft from 'react-icons/lib/go/arrow-left';
+import GoArrowRight from 'react-icons/lib/go/arrow-right';
+import IoArrowSwap from 'react-icons/lib/io/arrow-swap';
 import DropdownButton from '../dropdown-button';
 import { flashcardStatus } from '../../constants';
 import './styles.css';
@@ -20,6 +23,7 @@ export default class Flashcard extends PureComponent {
 			status: PropTypes.string,
 		}).isRequired,
 		onGoToNextCard: PropTypes.func.isRequired,
+		onGoToPreviousCard: PropTypes.func.isRequired,
 	};
 
 	state = {
@@ -72,7 +76,7 @@ export default class Flashcard extends PureComponent {
 	};
 
 	render() {
-		const { card, onGoToNextCard } = this.props;
+		const { card, onGoToNextCard, onGoToPreviousCard } = this.props;
 		const { parsedContent, showAnswer } = this.state;
 		const { front, status } = card;
 
@@ -84,8 +88,11 @@ export default class Flashcard extends PureComponent {
 					</div>
 				</div>
 				<div className="action-button-container">
+					<button className="btn btn-primary action-button-margin" onClick={onGoToPreviousCard}>
+						<GoArrowLeft size={24} />
+					</button>
 					<button className="btn btn-primary action-button-margin" onClick={this.handleFlipCard}>
-						Flip card
+						<IoArrowSwap size={24} />
 					</button>
 					<DropdownButton
 						className="btn btn-success action-button-margin status-button"
@@ -96,7 +103,7 @@ export default class Flashcard extends PureComponent {
 						{flashcardStatusLabel[status] || 'Set status'}
 					</DropdownButton>
 					<button className="btn btn-primary action-button-margin" onClick={onGoToNextCard}>
-						Next card
+						<GoArrowRight size={24} />
 					</button>
 				</div>
 			</div>
