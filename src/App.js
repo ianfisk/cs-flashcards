@@ -38,22 +38,20 @@ export default class App extends PureComponent {
 		const indexOfNextReviewCard = shuffledFlashcards.findIndex(x => x.id === nextReviewCardId);
 		this.setState({
 			flashcards: shuffledFlashcards,
-			indexOfCurrentFlashcard: indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0,
+			indexOfCurrentFlashcard: getNextFlashcardIndex(shuffledFlashcards, indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0),
 			indexOfNextReviewCard: indexOfNextReviewCard !== -1 ? indexOfNextReviewCard : 0,
 		});
 	}
 
 	handleGoToNextCard = () => {
 		this.setState(prevState => ({
-			indexOfCurrentFlashcard: (prevState.indexOfCurrentFlashcard + 1) % prevState.flashcards.length
+			indexOfCurrentFlashcard: getNextFlashcardIndex(prevState.flashcards, prevState.indexOfCurrentFlashcard),
 		}));
 	};
 
 	handleGoToPreviousCard = () => {
 		this.setState(prevState => ({
-			indexOfCurrentFlashcard: prevState.indexOfCurrentFlashcard === 0
-				? prevState.flashcards.length - 1
-				: prevState.indexOfCurrentFlashcard - 1,
+			indexOfCurrentFlashcard: getPreviousFlashcardIndex(prevState.flashcards, prevState.indexOfCurrentFlashcard),
 		}));
 	};
 
@@ -109,4 +107,32 @@ async function getAndSaveFlashcards() {
 
 	await stateManager.setShuffledFlashcardIds(shuffledFlashcards.map(x => x.id));
 	return shuffledFlashcards;
+}
+
+function getNextFlashcardIndex(flashcards, startIndex) {
+	let flashcardIndex = startIndex;
+	for (let i = 1; i < flashcards.length; i++) {
+		flashcardIndex = (flashcardIndex + 1) % flashcards.length;
+		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
+			break;
+		}
+	}
+
+	return flashcardIndex;
+}
+
+function getPreviousFlashcardIndex(flashcards, startIndex) {
+	let flashcardIndex = startIndex;
+	for (let i = 1; i < flashcards.length; i++) {
+		flashcardIndex -= 1;
+		if (flashcardIndex < 0) {
+			flashcardIndex = flashcards.length - 1;
+		}
+
+		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
+			break;
+		}
+	}
+
+	return flashcardIndex;
 }
