@@ -6,7 +6,8 @@ import DropdownButton from './components/dropdown-button';
 import Flashcard from './components/flash-card';
 import Divider from './components/divider';
 import CardList from './components/card-list';
-import shuffle from './utility/shuffle';
+import { shuffle } from './utility/shuffle';
+import { copyToClipboard } from './utility/copy';
 import { flashcardStatus } from './constants';
 import { flashcardManager, stateManager } from './flashcard-db';
 import './App.css';
@@ -98,14 +99,25 @@ export default class App extends PureComponent {
 		});
 	};
 
+	copyAsJson = () => {
+		const mappedCards = this.state.flashcards.map(x => {
+			const mappedCard = { ...x };
+			delete mappedCard.isEdited;
+			return mappedCard;
+		});
+
+		copyToClipboard(JSON.stringify(mappedCards));
+	};
+
 	renderMenu = () => {
 		return (
 			<React.Fragment>
-				<div><Link to="/">Home</Link></div>
-				<div><Link to="/known">Known cards</Link></div>
-				<div><Link to="/unknown">Unknown cards</Link></div>
-				<div><Link to="/hidden">Hidden cards</Link></div>
-				<div><Link to="/reviewSoon">Cards to review</Link></div>
+				<div className="menu-item"><Link to="/">Home</Link></div>
+				<div className="menu-item"><Link to="/known">Known cards</Link></div>
+				<div className="menu-item"><Link to="/unknown">Unknown cards</Link></div>
+				<div className="menu-item"><Link to="/reviewSoon">Cards to review</Link></div>
+				<div className="menu-item"><Link to="/hidden">Hidden cards</Link></div>
+				<button className="btn btn-primary" onClick={this.copyAsJson}>Copy cards as JSON</button>
 				<Divider />
 				<button className="btn btn-danger refresh-button" onClick={this.handleRefreshCards}>Reset</button>
 			</React.Fragment>

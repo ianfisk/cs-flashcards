@@ -1,4 +1,4 @@
-export default function shuffle(array) {
+export function shuffle(array) {
 	if (!array || array.length === 0) {
 		return array;
 	}

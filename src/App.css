@@ -17,6 +17,10 @@
 	text-overflow: ellipsis;
 }
 
+.menu-item {
+	margin: 8px 0;
+}
+
 .menu-button-container {
 	position: absolute;
 	right: 30px;
