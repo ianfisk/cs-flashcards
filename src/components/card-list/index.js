@@ -30,7 +30,7 @@ export default class CardList extends PureComponent {
 }
 
 const CardPreview = ({ card }) => {
-	const { id, front, status } = card;
+	const { id, front } = card;
 
 	return (
 		<Link to={`/card/${id}`} className="card-preview text-overflow">
