@@ -14,9 +14,8 @@ import './App.css';
 
 const initialState = {
 	flashcards: null,
-	currentFlashcard: 0,
+	currentFlashcard: null,
 	indexOfNextReviewCard: 0,
-	isLoading: true,
 };
 
 export default class App extends PureComponent {
@@ -113,6 +112,12 @@ export default class App extends PureComponent {
 		copyToClipboard(JSON.stringify(mappedCards));
 	};
 
+	mergeNewCards = async () => {
+		this.setState({ flashcards: null });
+		const newShuffledCards = await mergeNewCardsIntoLocalState(this.state.flashcards);
+		this.setState({ flashcards: newShuffledCards, currentFlashcard: getNextFlashcard(newShuffledCards, 0) });
+	}
+
 	renderMenu = () => {
 		return (
 			<React.Fragment>
@@ -122,7 +127,8 @@ export default class App extends PureComponent {
 				<div className="menu-item"><Link to="/reviewSoon">Cards to review</Link></div>
 				<div className="menu-item"><Link to="/hidden">Hidden cards</Link></div>
 				<div className="menu-item"><Link to="/edited">Edited cards</Link></div>
-				<button className="btn btn-primary" onClick={this.copyAsJson}>Copy cards as JSON</button>
+				<button className="btn btn-primary menu-button" onClick={this.copyAsJson}>Copy cards as JSON</button>
+				<button className="btn btn-primary menu-button" onClick={this.mergeNewCards}>Merge new cards</button>
 				<Divider />
 				<button className="btn btn-danger refresh-button" onClick={this.handleResetState}>Reset</button>
 			</React.Fragment>
@@ -238,15 +244,39 @@ function shuffleSavedFlashcards(savedFlashcards, shuffledFlashcardIds) {
 	return shuffledFlashcardIds.map(id => savedFlashcardsMap[id]);
 }
 
+async function mergeNewCardsIntoLocalState(existingFlashcards) {
+	// merge card updates by adding cards from flashcards.json that are not in the local db
+	const uneditedCards = await import('./flashcards.json');
+	const existingFlashcardsMap = existingFlashcards.reduce((map, card) => {
+		map[card.id] = card;
+		return map;
+	}, {});
+
+	for (let i = 0; i < uneditedCards.length; i++) {
+		const uneditedCard = uneditedCards[i];
+		if (!existingFlashcardsMap[uneditedCard.id]) {
+			await flashcardManager.putFlashcard({ ...uneditedCard, status: null });
+		}
+	}
+
+	const allCards = await flashcardManager.getFlashcards();
+	const shuffledFlashcards = shuffle(allCards);
+	await stateManager.setShuffledFlashcardIds(shuffledFlashcards.map(x => x.id));
+	return shuffledFlashcards;
+}
+
 async function getAndSaveFlashcards() {
-	const flashcards = await import('./flashcards.json');
-	const shuffledFlashcards = shuffle(flashcards);
+	const [flashcards] = await Promise.all([
+		import('./flashcards.json'),
+		flashcardManager.clearAll()
+	]);
 
 	// don't insert shuffled flashcards since the IndexedDB will sort them by id anyways
 	for (let i = 0; i < flashcards.length; i++) {
-		await flashcardManager.putFlashcard({...flashcards[i], status: null});
+		await flashcardManager.putFlashcard({ ...flashcards[i], status: null });
 	}
 
+	const shuffledFlashcards = shuffle(flashcards);
 	await stateManager.setShuffledFlashcardIds(shuffledFlashcards.map(x => x.id));
 	return shuffledFlashcards;
 }
