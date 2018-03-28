@@ -36,15 +36,6 @@ export const flashcardManager = {
 		return getValuesFromCursor(tx, store, reverseMapCard);
 	},
 
-	async getFlashcardsWithStatus(status) {
-		const db = await dbPromise;
-		const tx = db.transaction('flashcards');
-		const store = tx.objectStore('flashcards');
-		const index = store.index('status');
-
-		return getValuesFromCursor(tx, index, reverseMapCard, card => card.status === status);
-	},
-
 	async putFlashcard(flashcard) {
 		const db = await dbPromise;
 		const tx = db.transaction('flashcards', 'readwrite');
@@ -92,11 +83,11 @@ export const stateManager = {
 	},
 };
 
-async function getValuesFromCursor(tx, objectWithCursor, mapper, shouldAddValue = () => true) {
+async function getValuesFromCursor(tx, objectWithCursor, mapper) {
 	const values = [];
 	objectWithCursor.iterateCursor(cursor => {
 		if (!cursor) return;
-		if (shouldAddValue(cursor.value)) values.push(mapper(cursor.value));
+		values.push(mapper(cursor.value));
 		cursor.continue();
 	});
 
