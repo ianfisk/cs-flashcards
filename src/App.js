@@ -104,7 +104,9 @@ export default class App extends PureComponent {
 	copyAsJson = () => {
 		const mappedCards = this.state.flashcards.map(x => {
 			const mappedCard = { ...x };
+
 			delete mappedCard.isEdited;
+			delete mappedCard.status;
 			return mappedCard;
 		});
 
