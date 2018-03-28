@@ -74,16 +74,18 @@ export default class App extends PureComponent {
 		});
 	};
 
-	handleRefreshCards = async e => {
+	handleResetState = async e => {
 		e.preventDefault();
-		await Promise.all([
-			flashcardManager.clearAll(),
-			stateManager.setCurrentFlashcardId(null),
-			stateManager.setNextReviewCard(null),
-			stateManager.setShuffledFlashcardIds(null),
-		]);
+		if (window.confirm('Are you sure you want to reset all state?')) {
+			await Promise.all([
+				flashcardManager.clearAll(),
+				stateManager.setCurrentFlashcardId(null),
+				stateManager.setNextReviewCard(null),
+				stateManager.setShuffledFlashcardIds(null),
+			]);
 
-		this.setState(initialState, this.initializeState);
+			this.setState(initialState, this.initializeState);
+		}
 	};
 
 	updateCard = card => {
@@ -119,7 +121,7 @@ export default class App extends PureComponent {
 				<div className="menu-item"><Link to="/hidden">Hidden cards</Link></div>
 				<button className="btn btn-primary" onClick={this.copyAsJson}>Copy cards as JSON</button>
 				<Divider />
-				<button className="btn btn-danger refresh-button" onClick={this.handleRefreshCards}>Reset</button>
+				<button className="btn btn-danger refresh-button" onClick={this.handleResetState}>Reset</button>
 			</React.Fragment>
 		);
 	};
