@@ -9,15 +9,26 @@
 
 .flashcard-content-container {
 	border: 1px solid lightgray;
-	border-radius: 3px;
+	border-radius: 6px;
 	display: flex;
 	height: 70%;
 	margin-bottom: 12px;
 	overflow: scroll;
-	padding: 12px;
 	width: 85%;
 }
 
 .flashcard-content {
 	margin: auto;
+	overflow-x: hidden;
+	padding: 12px;
+	word-wrap: break-word;
+}
+
+.editor {
+	border: 1px solid #0079bf;
+	box-shadow: 0 0 2px 0 #0284C6;
+	padding: 12px;
+	resize: none;
+	width: 100%;
+	word-wrap: break-word;
 }

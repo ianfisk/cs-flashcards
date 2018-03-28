@@ -14,10 +14,17 @@ import idb from 'idb';
 //		nextReviewCardId: integer,
 //		shuffledIds: array
 // }
-const dbPromise = idb.open('flashcard-db', 1, upgradeDB => {
-	upgradeDB.createObjectStore('currentState');
-	const flashcardsObjectStore = upgradeDB.createObjectStore('flashcards', { keyPath: 'id' });
-	flashcardsObjectStore.createIndex('status', 'status', { unique: false });
+const dbPromise = idb.open('flashcard-db', 2, upgradeDB => {
+	let flashcardsObjectStore;
+	if (upgradeDB.oldVersion < 1) {
+		upgradeDB.createObjectStore('currentState');
+		flashcardsObjectStore = upgradeDB.createObjectStore('flashcards', { keyPath: 'id' });
+		flashcardsObjectStore.createIndex('status', 'status', { unique: false });
+	}
+	if (upgradeDB.oldVersion < 2) {
+		flashcardsObjectStore = upgradeDB.transaction.objectStore('flashcards');
+		flashcardsObjectStore.createIndex('isEdited', 'isEdited', { unique: false });
+	}
 });
 
 export const flashcardManager = {
@@ -26,7 +33,7 @@ export const flashcardManager = {
 		const tx = db.transaction('flashcards');
 		const store = tx.objectStore('flashcards');
 
-		return getValuesFromCursor(tx, store);
+		return getValuesFromCursor(tx, store, reverseMapCard);
 	},
 
 	async getFlashcardsWithStatus(status) {
@@ -35,7 +42,7 @@ export const flashcardManager = {
 		const store = tx.objectStore('flashcards');
 		const index = store.index('status');
 
-		return getValuesFromCursor(tx, index, card => card.status === status);
+		return getValuesFromCursor(tx, index, reverseMapCard, card => card.status === status);
 	},
 
 	async putFlashcard(flashcard) {
@@ -43,7 +50,7 @@ export const flashcardManager = {
 		const tx = db.transaction('flashcards', 'readwrite');
 		const store = tx.objectStore('flashcards');
 
-		store.put(flashcard);
+		store.put(mapCard(flashcard));
 
 		return tx.complete;
 	},
@@ -85,11 +92,11 @@ export const stateManager = {
 	},
 };
 
-async function getValuesFromCursor(tx, objectWithCursor, shouldAddValue = () => true) {
+async function getValuesFromCursor(tx, objectWithCursor, mapper, shouldAddValue = () => true) {
 	const values = [];
 	objectWithCursor.iterateCursor(cursor => {
 		if (!cursor) return;
-		if (shouldAddValue(cursor.value)) values.push(cursor.value);
+		if (shouldAddValue(cursor.value)) values.push(mapper(cursor.value));
 		cursor.continue();
 	});
 
@@ -113,4 +120,17 @@ async function setCurrentState(key, value) {
 	const store = tx.objectStore('currentState');
 	store.put(value, key);
 	return tx.complete;
+}
+
+function mapCard(card) {
+	const dbCard = { ...card };
+	if (card.isEdited) {
+		dbCard.isEdited = 1;
+	}
+
+	return dbCard;
+}
+
+function reverseMapCard(dbCard) {
+	return { ...dbCard, isEdited: !!dbCard.isEdited };
 }

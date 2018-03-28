@@ -119,6 +119,7 @@ export default class App extends PureComponent {
 				<div className="menu-item"><Link to="/unknown">Unknown cards</Link></div>
 				<div className="menu-item"><Link to="/reviewSoon">Cards to review</Link></div>
 				<div className="menu-item"><Link to="/hidden">Hidden cards</Link></div>
+				<div className="menu-item"><Link to="/edited">Edited cards</Link></div>
 				<button className="btn btn-primary" onClick={this.copyAsJson}>Copy cards as JSON</button>
 				<Divider />
 				<button className="btn btn-danger refresh-button" onClick={this.handleResetState}>Reset</button>
@@ -194,6 +195,15 @@ export default class App extends PureComponent {
 								)}
 							/>
 							<Route
+								path="/reviewSoon"
+								render={() => (
+									<CardList
+										header="Cards to review"
+										cards={flashcards.filter(x => x.status === flashcardStatus.reviewSoon)}
+									/>
+								)}
+							/>
+							<Route
 								path="/hidden"
 								render={() => (
 									<CardList
@@ -203,11 +213,11 @@ export default class App extends PureComponent {
 								)}
 							/>
 							<Route
-								path="/reviewSoon"
+								path="/edited"
 								render={() => (
 									<CardList
-										header="Cards to review"
-										cards={flashcards.filter(x => x.status === flashcardStatus.reviewSoon)}
+										header="Edited cards"
+										cards={flashcards.filter(x => x.isEdited)}
 									/>
 								)}
 							/>
