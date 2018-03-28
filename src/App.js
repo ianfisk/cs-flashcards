@@ -7,6 +7,7 @@ import Flashcard from './components/flash-card';
 import Divider from './components/divider';
 import CardList from './components/card-list';
 import { shuffle } from './utility/shuffle';
+import { getNextFlashcard, getPreviousFlashcard } from './utility/navigation';
 import { copyToClipboard } from './utility/copy';
 import { flashcardStatus } from './constants';
 import { flashcardManager, stateManager } from './flashcard-db';
@@ -279,41 +280,4 @@ async function getAndSaveFlashcards() {
 	const shuffledFlashcards = shuffle(flashcards);
 	await stateManager.setShuffledFlashcardIds(shuffledFlashcards.map(x => x.id));
 	return shuffledFlashcards;
-}
-
-// Search from startIndex (inclusive) to the end of the array for the first card
-// that is not hidden. Loop to the front if necessary.
-function getNextFlashcard(flashcards, startIndex) {
-	let flashcardIndex = startIndex % flashcards.length;
-	for (let i = 1; i < flashcards.length; i++) {
-		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
-			break;
-		}
-
-		flashcardIndex = (flashcardIndex + 1) % flashcards.length;
-	}
-
-	return flashcards[flashcardIndex];
-}
-
-// Search from startIndex (inclusive) to the beginning of the array for the first card
-// that is not hidden. Loop to the end if necessary.
-function getPreviousFlashcard(flashcards, startIndex) {
-	if (startIndex < 0) {
-		startIndex = flashcards.length - 1;
-	}
-
-	let flashcardIndex = startIndex;
-	for (let i = 1; i < flashcards.length; i++) {
-		if (flashcards[flashcardIndex].status !== flashcardStatus.dontShow) {
-			break;
-		}
-
-		flashcardIndex -= 1;
-		if (flashcardIndex < 0) {
-			flashcardIndex = flashcards.length - 1;
-		}
-	}
-
-	return flashcards[flashcardIndex];
 }
