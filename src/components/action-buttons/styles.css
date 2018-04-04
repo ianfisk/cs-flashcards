@@ -4,6 +4,9 @@
 
 .action-button-container {
 	display: flex;
+	flex-shrink: 0;
+	height: 48px;
+	margin-bottom: 12px;
 }
 
 .status-button {

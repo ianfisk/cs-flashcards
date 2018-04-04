@@ -162,13 +162,18 @@ export default class App extends PureComponent {
 								exact
 								path="/"
 								render={() => (
-									<Flashcard
-										id={currentFlashcard.id}
-										card={currentFlashcard}
-										onGoToNextCard={this.handleGoToNextCard}
-										onGoToPreviousCard={this.handleGoToPreviousCard}
-										updateCard={card => this.updateCard({ card })}
-									/>
+									<div className="home-card-container">
+										<Flashcard
+											id={currentFlashcard.id}
+											card={currentFlashcard}
+											onGoToNextCard={this.handleGoToNextCard}
+											onGoToPreviousCard={this.handleGoToPreviousCard}
+											updateCard={card => this.updateCard({ card })}
+										/>
+										<div className="current-card-index">
+											{`${flashcards.findIndex(x => x.id === currentFlashcard.id) + 1}/${flashcards.length}`}
+										</div>
+									</div>
 								)}
 							/>
 							<Route
