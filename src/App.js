@@ -88,7 +88,7 @@ export default class App extends PureComponent {
 		}
 	};
 
-	updateCard = card => {
+	updateCard = ({ card, shouldSetCurrentFlashcard = true }) => {
 		flashcardManager.putFlashcard(card);
 
 		this.setState(prevState => {
@@ -97,7 +97,9 @@ export default class App extends PureComponent {
 			const cardIndex = updatedCards.findIndex(x => x.id === card.id);
 			updatedCards[cardIndex] = card;
 
-			return { flashcards: updatedCards, currentFlashcard: card };
+			return shouldSetCurrentFlashcard
+				? { flashcards: updatedCards, currentFlashcard: card }
+				: { flashcards: updatedCards };
 		});
 	};
 
@@ -165,7 +167,7 @@ export default class App extends PureComponent {
 										card={currentFlashcard}
 										onGoToNextCard={this.handleGoToNextCard}
 										onGoToPreviousCard={this.handleGoToPreviousCard}
-										updateCard={this.updateCard}
+										updateCard={card => this.updateCard({ card })}
 									/>
 								)}
 							/>
@@ -180,7 +182,7 @@ export default class App extends PureComponent {
 										<Flashcard
 											id={card.id}
 											card={card}
-											updateCard={this.updateCard}
+											updateCard={card => this.updateCard({ card, shouldSetCurrentFlashcard: false })}
 										/>
 									) : <div>Card not found</div>;
 								}}
