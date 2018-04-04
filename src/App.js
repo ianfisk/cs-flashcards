@@ -141,6 +141,28 @@ export default class App extends PureComponent {
 	render() {
 		const { flashcards, currentFlashcard } = this.state;
 		const isLoading = !flashcards || !flashcards.length;
+		const cardFilters = {
+			known: {
+				header: 'Known cards',
+				getCards: () => flashcards.filter(x => x.status === flashcardStatus.known),
+			},
+			unknown: {
+				header: 'Unknown cards',
+				getCards: () => flashcards.filter(x => x.status === flashcardStatus.unknown),
+			},
+			reviewSoon: {
+				header: 'Cards to review',
+				getCards: () => flashcards.filter(x => x.status === flashcardStatus.reviewSoon),
+			},
+			hidden: {
+				header: 'Hidden cards',
+				getCards: () => flashcards.filter(x => x.status === flashcardStatus.dontShow),
+			},
+			edited: {
+				header: 'Edited cards',
+				getCards: () => flashcards.filter(x => x.isEdited),
+			},
+		};
 
 		return (
 			<Router>
@@ -192,51 +214,18 @@ export default class App extends PureComponent {
 									) : <div>Card not found</div>;
 								}}
 							/>
-							<Route
-								path="/known"
-								render={() => (
-									<CardList
-										header="Known cards"
-										cards={flashcards.filter(x => x.status === flashcardStatus.known)}
-									/>
-								)}
-							/>
-							<Route
-								path="/unknown"
-								render={() => (
-									<CardList
-										header="Unknown cards"
-										cards={flashcards.filter(x => x.status === flashcardStatus.unknown)}
-									/>
-								)}
-							/>
-							<Route
-								path="/reviewSoon"
-								render={() => (
-									<CardList
-										header="Cards to review"
-										cards={flashcards.filter(x => x.status === flashcardStatus.reviewSoon)}
-									/>
-								)}
-							/>
-							<Route
-								path="/hidden"
-								render={() => (
-									<CardList
-										header="Hidden cards"
-										cards={flashcards.filter(x => x.status === flashcardStatus.dontShow)}
-									/>
-								)}
-							/>
-							<Route
-								path="/edited"
-								render={() => (
-									<CardList
-										header="Edited cards"
-										cards={flashcards.filter(x => x.isEdited)}
-									/>
-								)}
-							/>
+							{Object.keys(cardFilters).map(path =>
+								<Route
+									key={path}
+									path={`/${path}`}
+									render={() => (
+										<CardList
+											header={cardFilters[path].header}
+											cards={cardFilters[path].getCards()}
+										/>
+									)}
+								/>
+							)}
 						</React.Fragment>}
 				</div>
 			</Router>
