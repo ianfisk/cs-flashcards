@@ -37,13 +37,7 @@ export default class ActionButtons extends PureComponent {
 				)}
 				<button
 					className="btn btn-no-styling status-dropdown-item"
-					onClick={() => {
-						const { updateCard, card } = this.props;
-						updateCard({
-							...card,
-							status: null,
-						});
-					}}
+					onClick={() => this.props.updateCardStatus(null)}
 				>
 					None
 				</button>
