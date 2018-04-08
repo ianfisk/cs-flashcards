@@ -7,7 +7,7 @@ import { buttonTypes } from '../constants';
 export default class Button extends PureComponent {
 	static propTypes = {
 		disabled: PropTypes.bool,
-		waveColor: PropTypes.oneOf(['light', 'red', 'yellow', 'orange', 'purple', 'green', 'teal']),
+		waveColor: PropTypes.oneOf(['default', 'light', 'red', 'yellow', 'orange', 'purple', 'green', 'teal']),
 		floating: PropTypes.bool,
 		flat: PropTypes.bool,
 		large: PropTypes.bool,
@@ -26,6 +26,10 @@ export default class Button extends PureComponent {
 			'waves-effect': true,
 			[`waves-${waveColor}`]: !!waveColor,
 		};
+
+		if (waveColor !== 'default') {
+			classes[`waves-${waveColor}`] = waveColor;
+		}
 
 		buttonTypes.forEach(type => {
 			if (rest[type]) {

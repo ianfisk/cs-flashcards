@@ -175,7 +175,7 @@ export default class App extends PureComponent {
 							<div className="menu-button-container">
 								<DropdownButton
 									className="deep-orange darken-2 hamburger-button"
-									dropdownContainerClassName="menu-container z-depth-2 grey lighten-5"
+									dropdownContainerClassName="menu-container z-depth-2"
 									renderDropdownContents={this.renderMenu}
 									horizontalPosition="left"
 									floating

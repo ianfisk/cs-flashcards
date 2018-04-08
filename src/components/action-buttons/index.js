@@ -30,17 +30,19 @@ export default class ActionButtons extends PureComponent {
 				{Object.keys(flashcardStatus).map(status =>
 					<Button
 						key={status}
-						className="grey lighten-5 black-text status-dropdown-item"
-						waveColor="teal"
+						className="blue-text status-dropdown-item"
+						waveColor="default"
 						onClick={() => this.props.updateCardStatus(status)}
+						flat
 					>
 						{flashcardStatusLabel[status]}
 					</Button>
 				)}
 				<Button
-					className="grey lighten-5 black-text status-dropdown-item"
-					waveColor="teal"
+					className="blue-text status-dropdown-item"
+					waveColor="default"
 					onClick={() => this.props.updateCardStatus(null)}
+					flat
 				>
 					None
 				</Button>
@@ -61,8 +63,9 @@ export default class ActionButtons extends PureComponent {
 					<IoArrowSwap size={24} />
 				</Button>
 				<DropdownButton
-					className="action-button-margin status-button"
-					dropdownContainerClassName="status-dropdown-container"
+					className="grey lighten-3 black-text action-button-margin status-button"
+					waveColor="default"
+					dropdownContainerClassName="z-depth-2 status-dropdown-container"
 					renderDropdownContents={this.renderStatusDropdown}
 					verticalPosition="above"
 				>
