@@ -7,15 +7,24 @@ import { buttonTypes } from '../constants';
 export default class Button extends PureComponent {
 	static propTypes = {
 		disabled: PropTypes.bool,
-		waveColor: PropTypes.oneOf(['default', 'light', 'red', 'yellow', 'orange', 'purple', 'green', 'teal']),
+		waveColor: PropTypes.oneOf([
+			'default',
+			'light',
+			'red',
+			'yellow',
+			'orange',
+			'purple',
+			'green',
+			'teal'
+		]),
 		floating: PropTypes.bool,
 		flat: PropTypes.bool,
 		large: PropTypes.bool,
-		small: PropTypes.bool,
+		small: PropTypes.bool
 	};
 
 	static defaultProps = {
-		waveColor: 'light',
+		waveColor: 'light'
 	};
 
 	render() {
@@ -24,7 +33,7 @@ export default class Button extends PureComponent {
 			btn: true,
 			disabled,
 			'waves-effect': true,
-			[`waves-${waveColor}`]: !!waveColor,
+			[`waves-${waveColor}`]: !!waveColor
 		};
 
 		if (waveColor !== 'default') {
@@ -40,7 +49,11 @@ export default class Button extends PureComponent {
 		});
 
 		return (
-			<button {...rest} className={classNames(classes, className)} disabled={!!disabled}>
+			<button
+				{...rest}
+				className={classNames(classes, className)}
+				disabled={!!disabled}
+			>
 				{children}
 			</button>
 		);

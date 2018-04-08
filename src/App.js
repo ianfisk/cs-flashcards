@@ -19,7 +19,7 @@ import './App.css';
 const initialState = {
 	flashcards: null,
 	currentFlashcard: null,
-	indexOfNextReviewCard: 0,
+	indexOfNextReviewCard: 0
 };
 
 export default class App extends PureComponent {
@@ -42,23 +42,35 @@ export default class App extends PureComponent {
 			flashcardManager.getFlashcards()
 		]);
 
-		const shuffledFlashcards = shuffledFlashcardIds.length && savedFlashcards.length
-			? shuffleSavedFlashcards(savedFlashcards, shuffledFlashcardIds)
-			: await getAndSaveFlashcards();
+		const shuffledFlashcards =
+			shuffledFlashcardIds.length && savedFlashcards.length
+				? shuffleSavedFlashcards(savedFlashcards, shuffledFlashcardIds)
+				: await getAndSaveFlashcards();
 
-		const indexOfCurrentFlashcard = shuffledFlashcards.findIndex(x => x.id === currentFlashcardId);
-		const indexOfNextReviewCard = shuffledFlashcards.findIndex(x => x.id === nextReviewCardId);
+		const indexOfCurrentFlashcard = shuffledFlashcards.findIndex(
+			x => x.id === currentFlashcardId
+		);
+		const indexOfNextReviewCard = shuffledFlashcards.findIndex(
+			x => x.id === nextReviewCardId
+		);
 		this.setState({
 			flashcards: shuffledFlashcards,
-			currentFlashcard: getNextFlashcard(shuffledFlashcards, indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0),
-			indexOfNextReviewCard: indexOfNextReviewCard !== -1 ? indexOfNextReviewCard : 0,
+			currentFlashcard: getNextFlashcard(
+				shuffledFlashcards,
+				indexOfCurrentFlashcard !== -1 ? indexOfCurrentFlashcard : 0
+			),
+			indexOfNextReviewCard:
+				indexOfNextReviewCard !== -1 ? indexOfNextReviewCard : 0
 		});
 	}
 
 	handleGoToNextCard = () => {
 		this.setState(prevState => {
 			const { flashcards, currentFlashcard } = prevState;
-			const nextFlashcard = getNextFlashcard(flashcards, flashcards.findIndex(x => x.id === currentFlashcard.id) + 1);
+			const nextFlashcard = getNextFlashcard(
+				flashcards,
+				flashcards.findIndex(x => x.id === currentFlashcard.id) + 1
+			);
 
 			stateManager.setCurrentFlashcardId(nextFlashcard.id);
 
@@ -69,7 +81,10 @@ export default class App extends PureComponent {
 	handleGoToPreviousCard = () => {
 		this.setState(prevState => {
 			const { flashcards, currentFlashcard } = prevState;
-			const previousFlashcard = getPreviousFlashcard(flashcards, flashcards.findIndex(x => x.id === currentFlashcard.id) - 1);
+			const previousFlashcard = getPreviousFlashcard(
+				flashcards,
+				flashcards.findIndex(x => x.id === currentFlashcard.id) - 1
+			);
 
 			stateManager.setCurrentFlashcardId(previousFlashcard.id);
 
@@ -84,7 +99,7 @@ export default class App extends PureComponent {
 				flashcardManager.clearAll(),
 				stateManager.setCurrentFlashcardId(null),
 				stateManager.setNextReviewCard(null),
-				stateManager.setShuffledFlashcardIds(null),
+				stateManager.setShuffledFlashcardIds(null)
 			]);
 
 			this.setState(initialState, this.initializeState);
@@ -120,31 +135,57 @@ export default class App extends PureComponent {
 
 	mergeNewCards = async () => {
 		this.setState({ flashcards: null });
-		const newShuffledCards = await mergeNewCardsIntoLocalState(this.state.flashcards);
-		this.setState({ flashcards: newShuffledCards, currentFlashcard: getNextFlashcard(newShuffledCards, 0) });
-	}
+		const newShuffledCards = await mergeNewCardsIntoLocalState(
+			this.state.flashcards
+		);
+		this.setState({
+			flashcards: newShuffledCards,
+			currentFlashcard: getNextFlashcard(newShuffledCards, 0)
+		});
+	};
 
 	renderMenu = isMovingIn => {
 		const containerClasses = {
 			'hamburger-menu-animation-container': true,
 			'hamburger-menu-in': isMovingIn,
-			'hamburger-menu-out': this.isShowingMenu && !isMovingIn,
+			'hamburger-menu-out': this.isShowingMenu && !isMovingIn
 		};
 
 		this.isShowingMenu = isMovingIn;
 
 		return (
 			<div className={classNames(containerClasses)}>
-				<div className="menu-item"><Link to="/">Home</Link></div>
-				<div className="menu-item"><Link to="/known">Known cards</Link></div>
-				<div className="menu-item"><Link to="/unknown">Unknown cards</Link></div>
-				<div className="menu-item"><Link to="/reviewSoon">Cards to review</Link></div>
-				<div className="menu-item"><Link to="/hidden">Hidden cards</Link></div>
-				<div className="menu-item"><Link to="/edited">Edited cards</Link></div>
-				<Button className="menu-button" onClick={this.copyAsJson}>Copy cards as JSON</Button>
-				<Button className="menu-button" onClick={this.mergeNewCards}>Merge new cards</Button>
+				<div className="menu-item">
+					<Link to="/">Home</Link>
+				</div>
+				<div className="menu-item">
+					<Link to="/known">Known cards</Link>
+				</div>
+				<div className="menu-item">
+					<Link to="/unknown">Unknown cards</Link>
+				</div>
+				<div className="menu-item">
+					<Link to="/reviewSoon">Cards to review</Link>
+				</div>
+				<div className="menu-item">
+					<Link to="/hidden">Hidden cards</Link>
+				</div>
+				<div className="menu-item">
+					<Link to="/edited">Edited cards</Link>
+				</div>
+				<Button className="menu-button" onClick={this.copyAsJson}>
+					Copy cards as JSON
+				</Button>
+				<Button className="menu-button" onClick={this.mergeNewCards}>
+					Merge new cards
+				</Button>
 				<Divider />
-				<Button className="red darken-1 refresh-button" onClick={this.handleResetState}>Reset</Button>
+				<Button
+					className="red darken-1 refresh-button"
+					onClick={this.handleResetState}
+				>
+					Reset
+				</Button>
 			</div>
 		);
 	};
@@ -155,31 +196,35 @@ export default class App extends PureComponent {
 		const cardFilters = {
 			known: {
 				header: 'Known cards',
-				getCards: () => flashcards.filter(x => x.status === flashcardStatus.known),
+				getCards: () =>
+					flashcards.filter(x => x.status === flashcardStatus.known)
 			},
 			unknown: {
 				header: 'Unknown cards',
-				getCards: () => flashcards.filter(x => x.status === flashcardStatus.unknown),
+				getCards: () =>
+					flashcards.filter(x => x.status === flashcardStatus.unknown)
 			},
 			reviewSoon: {
 				header: 'Cards to review',
-				getCards: () => flashcards.filter(x => x.status === flashcardStatus.reviewSoon),
+				getCards: () =>
+					flashcards.filter(x => x.status === flashcardStatus.reviewSoon)
 			},
 			hidden: {
 				header: 'Hidden cards',
-				getCards: () => flashcards.filter(x => x.status === flashcardStatus.dontShow),
+				getCards: () =>
+					flashcards.filter(x => x.status === flashcardStatus.dontShow)
 			},
 			edited: {
 				header: 'Edited cards',
-				getCards: () => flashcards.filter(x => x.isEdited),
-			},
+				getCards: () => flashcards.filter(x => x.isEdited)
+			}
 		};
 
 		return (
 			<Router>
 				<div className="app-container">
 					<SyncLoader color="#36D7B7" loading={isLoading} />
-					{!isLoading &&
+					{!isLoading && (
 						<React.Fragment>
 							<div className="menu-button-container">
 								<DropdownButton
@@ -206,7 +251,9 @@ export default class App extends PureComponent {
 											updateCard={card => this.updateCard({ card })}
 										/>
 										<div className="current-card-index">
-											{`${flashcards.findIndex(x => x.id === currentFlashcard.id) + 1}/${flashcards.length}`}
+											{`${flashcards.findIndex(
+												x => x.id === currentFlashcard.id
+											) + 1}/${flashcards.length}`}
 										</div>
 									</div>
 								)}
@@ -222,12 +269,19 @@ export default class App extends PureComponent {
 										<Flashcard
 											id={card.id}
 											card={card}
-											updateCard={card => this.updateCard({ card, shouldSetCurrentFlashcard: false })}
+											updateCard={card =>
+												this.updateCard({
+													card,
+													shouldSetCurrentFlashcard: false
+												})
+											}
 										/>
-									) : <div>Card not found</div>;
+									) : (
+										<div>Card not found</div>
+									);
 								}}
 							/>
-							{Object.keys(cardFilters).map(path =>
+							{Object.keys(cardFilters).map(path => (
 								<Route
 									key={path}
 									path={`/${path}`}
@@ -239,8 +293,9 @@ export default class App extends PureComponent {
 										/>
 									)}
 								/>
-							)}
-						</React.Fragment>}
+							))}
+						</React.Fragment>
+					)}
 				</div>
 			</Router>
 		);

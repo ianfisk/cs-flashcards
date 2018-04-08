@@ -4,19 +4,14 @@ export const flashcardStatus = {
 	known: 'known',
 	unknown: 'unknown',
 	reviewSoon: 'reviewSoon',
-	dontShow: 'dontShow',
+	dontShow: 'dontShow'
 };
 
 export const flashcardPropTypes = PropTypes.shape({
 	id: PropTypes.number.isRequired,
 	front: PropTypes.string.isRequired,
 	back: PropTypes.string.isRequired,
-	status: PropTypes.string,
+	status: PropTypes.string
 }).isRequired;
 
-export const buttonTypes = [
-	'floating',
-	'flat',
-	'large',
-	'small',
-];
+export const buttonTypes = ['floating', 'flat', 'large', 'small'];

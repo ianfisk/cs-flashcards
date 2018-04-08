@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 export default class DoubleTap extends PureComponent {
 	static propTypes = {
 		onDoubleTap: PropTypes.func.isRequired,
-		className: PropTypes.string,
+		className: PropTypes.string
 	};
 
 	timeOfLastClick = null;

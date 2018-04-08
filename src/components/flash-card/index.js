@@ -13,21 +13,23 @@ export default class Flashcard extends PureComponent {
 		card: flashcardPropTypes,
 		updateCard: PropTypes.func.isRequired,
 		onGoToNextCard: PropTypes.func,
-		onGoToPreviousCard: PropTypes.func,
+		onGoToPreviousCard: PropTypes.func
 	};
 
 	state = {
 		parsedContent: splitOnNewlines(this.props.card.back),
 		showAnswer: null,
 		isEditing: false,
-		editedContent: '',
+		editedContent: ''
 	};
 
 	componentDidUpdate(prevProps, prevState) {
 		if (prevProps.card.id !== this.props.card.id) {
 			this.setState(prevState => ({
-				parsedContent: !this.isAnimatingDuringNavigation ? splitOnNewlines(this.props.card.back) : prevState.parsedContent,
-				showAnswer: prevState.showAnswer !== null ? false : null,
+				parsedContent: !this.isAnimatingDuringNavigation
+					? splitOnNewlines(this.props.card.back)
+					: prevState.parsedContent,
+				showAnswer: prevState.showAnswer !== null ? false : null
 			}));
 		}
 
@@ -42,7 +44,7 @@ export default class Flashcard extends PureComponent {
 			const editedContent = this.state.editedContent.trim();
 			if (this.state.showAnswer) {
 				updatedCard.back = editedContent;
-				this.setState({ parsedContent: splitOnNewlines(editedContent) })
+				this.setState({ parsedContent: splitOnNewlines(editedContent) });
 			} else {
 				updatedCard.front = editedContent;
 			}
@@ -88,12 +90,12 @@ export default class Flashcard extends PureComponent {
 			'flashcard-back': true,
 			'z-depth-2': showAnswer,
 			'slide-down': showAnswer !== null && !showAnswer,
-			'slide-up': showAnswer,
+			'slide-up': showAnswer
 		};
 		const cardFrontClasses = {
 			'flashcard-front': true,
 			'show-front-animation': showAnswer !== null && !showAnswer,
-			'hide-front-animation': showAnswer,
+			'hide-front-animation': showAnswer
 		};
 
 		return (
@@ -103,7 +105,7 @@ export default class Flashcard extends PureComponent {
 						onDoubleTap={() => {
 							this.setState({
 								isEditing: true,
-								editedContent: showAnswer ? back : front,
+								editedContent: showAnswer ? back : front
 							});
 						}}
 					>
@@ -112,7 +114,12 @@ export default class Flashcard extends PureComponent {
 						</div>
 						<div className={classNames(cardBackClasses)}>
 							<span className="flashcard-content">
-								{parsedContent.map((line, i) => <span key={i}>{line}<br /></span>)}
+								{parsedContent.map((line, i) => (
+									<span key={i}>
+										{line}
+										<br />
+									</span>
+								))}
 							</span>
 						</div>
 					</DoubleTap>
@@ -131,8 +138,16 @@ export default class Flashcard extends PureComponent {
 				</div>
 				<ActionButtons
 					cardStatus={status}
-					onGoToNextCard={onGoToNextCard ? (...args) => this.handleNavigate(onGoToNextCard, ...args) : null}
-					onGoToPreviousCard={onGoToPreviousCard ? (...args) => this.handleNavigate(onGoToPreviousCard, ...args) : null}
+					onGoToNextCard={
+						onGoToNextCard
+							? (...args) => this.handleNavigate(onGoToNextCard, ...args)
+							: null
+					}
+					onGoToPreviousCard={
+						onGoToPreviousCard
+							? (...args) => this.handleNavigate(onGoToPreviousCard, ...args)
+							: null
+					}
 					onFlipCard={this.handleFlipCard}
 					updateCardStatus={newStatus => {
 						updateCard({ ...card, status: newStatus });

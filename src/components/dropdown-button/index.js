@@ -7,15 +7,16 @@ import './styles.css';
 export default class DropdownButton extends PureComponent {
 	static propTypes = {
 		className: PropTypes.string.isRequired,
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+			.isRequired,
 		renderDropdownContents: PropTypes.func.isRequired,
 		verticalPosition: PropTypes.string,
 		horizontalPosition: PropTypes.string,
-		dropdownContainerClassName: PropTypes.string,
+		dropdownContainerClassName: PropTypes.string
 	};
 
 	state = {
-		showDropdown: false,
+		showDropdown: false
 	};
 
 	componentDidUpdate(prevProps, prevState) {
@@ -49,19 +50,23 @@ export default class DropdownButton extends PureComponent {
 			verticalPosition,
 			horizontalPosition,
 			dropdownContainerClassName,
-			...buttonProps,
+			...buttonProps
 		} = this.props;
 		const { showDropdown } = this.state;
 
 		const dropdownClasses = {
 			'dropdown-container': true,
 			'dropdown-container-above': verticalPosition === 'above',
-			'dropdown-container-left': horizontalPosition === 'left',
+			'dropdown-container-left': horizontalPosition === 'left'
 		};
 
 		return (
 			<div className="dropdown-button-container">
-				<Button {...buttonProps} className={className} onClick={this.handleClick}>
+				<Button
+					{...buttonProps}
+					className={className}
+					onClick={this.handleClick}
+				>
 					{children}
 				</Button>
 				<div

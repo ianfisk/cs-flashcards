@@ -13,7 +13,7 @@ const flashcardStatusLabel = {
 	[flashcardStatus.known]: 'Known',
 	[flashcardStatus.unknown]: 'Unknown',
 	[flashcardStatus.reviewSoon]: 'Review soon',
-	[flashcardStatus.dontShow]: `Don't show`,
+	[flashcardStatus.dontShow]: `Don't show`
 };
 
 export default class ActionButtons extends PureComponent {
@@ -22,21 +22,21 @@ export default class ActionButtons extends PureComponent {
 		updateCardStatus: PropTypes.func.isRequired,
 		cardStatus: PropTypes.string,
 		onGoToNextCard: PropTypes.func,
-		onGoToPreviousCard: PropTypes.func,
+		onGoToPreviousCard: PropTypes.func
 	};
 
 	renderStatusDropdown = isMovingIn => {
 		const containerClasses = {
 			'status-menu': true,
 			'status-menu-in': isMovingIn,
-			'status-menu-out': this.isShowingMenu && !isMovingIn,
+			'status-menu-out': this.isShowingMenu && !isMovingIn
 		};
 
 		this.isShowingMenu = isMovingIn;
 
 		return (
 			<div className={classNames(containerClasses)}>
-				{Object.keys(flashcardStatus).map(status =>
+				{Object.keys(flashcardStatus).map(status => (
 					<Button
 						key={status}
 						className="blue-text status-dropdown-item"
@@ -46,7 +46,7 @@ export default class ActionButtons extends PureComponent {
 					>
 						{flashcardStatusLabel[status]}
 					</Button>
-				)}
+				))}
 				<Button
 					className="blue-text status-dropdown-item"
 					waveColor="default"
@@ -60,15 +60,27 @@ export default class ActionButtons extends PureComponent {
 	};
 
 	render() {
-		const { onGoToNextCard, onGoToPreviousCard, onFlipCard, cardStatus } = this.props;
+		const {
+			onGoToNextCard,
+			onGoToPreviousCard,
+			onFlipCard,
+			cardStatus
+		} = this.props;
 
 		return (
 			<div className="action-button-container">
-				{onGoToPreviousCard ?
-					<Button className="icon-button action-button-margin" onClick={onGoToPreviousCard}>
+				{onGoToPreviousCard ? (
+					<Button
+						className="icon-button action-button-margin"
+						onClick={onGoToPreviousCard}
+					>
 						<GoChevronLeft size={24} />
-					</Button> : null}
-				<Button className="icon-button action-button-margin" onClick={onFlipCard}>
+					</Button>
+				) : null}
+				<Button
+					className="icon-button action-button-margin"
+					onClick={onFlipCard}
+				>
 					<IoArrowSwap size={24} />
 				</Button>
 				<DropdownButton
@@ -80,10 +92,14 @@ export default class ActionButtons extends PureComponent {
 				>
 					{flashcardStatusLabel[cardStatus] || 'Set status'}
 				</DropdownButton>
-				{onGoToNextCard ?
-					<Button className="icon-button action-button-margin" onClick={onGoToNextCard}>
+				{onGoToNextCard ? (
+					<Button
+						className="icon-button action-button-margin"
+						onClick={onGoToNextCard}
+					>
 						<GoChevronRight size={24} />
-					</Button> : null}
+					</Button>
+				) : null}
 			</div>
 		);
 	}

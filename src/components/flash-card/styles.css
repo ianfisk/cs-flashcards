@@ -48,7 +48,7 @@ flashcard-content > span:active {
 .editor {
 	background: white;
 	border: 1px solid #0079bf;
-	box-shadow: 0 0 2px 0 #0284C6;
+	box-shadow: 0 0 2px 0 #0284c6;
 	height: 100%;
 	left: 0;
 	line-height: 1.5;
@@ -63,28 +63,28 @@ flashcard-content > span:active {
 .slide-down {
 	animation-duration: 0.3s;
 	animation-name: slideDown;
-	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	animation-fill-mode: forwards;
 }
 
 .slide-up {
 	animation-duration: 0.3s;
 	animation-name: slideUp;
-	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	animation-fill-mode: forwards;
 }
 
 .show-front-animation {
 	animation-duration: 0.3s;
 	animation-name: showFront;
-	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	animation-fill-mode: forwards;
 }
 
 .hide-front-animation {
 	animation-duration: 0.3s;
 	animation-name: hideFront;
-	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	animation-fill-mode: forwards;
 }
 

@@ -18,12 +18,16 @@ const dbPromise = idb.open('flashcard-db', 2, upgradeDB => {
 	let flashcardsObjectStore;
 	if (upgradeDB.oldVersion < 1) {
 		upgradeDB.createObjectStore('currentState');
-		flashcardsObjectStore = upgradeDB.createObjectStore('flashcards', { keyPath: 'id' });
+		flashcardsObjectStore = upgradeDB.createObjectStore('flashcards', {
+			keyPath: 'id'
+		});
 		flashcardsObjectStore.createIndex('status', 'status', { unique: false });
 	}
 	if (upgradeDB.oldVersion < 2) {
 		flashcardsObjectStore = upgradeDB.transaction.objectStore('flashcards');
-		flashcardsObjectStore.createIndex('isEdited', 'isEdited', { unique: false });
+		flashcardsObjectStore.createIndex('isEdited', 'isEdited', {
+			unique: false
+		});
 	}
 });
 
@@ -75,12 +79,12 @@ export const stateManager = {
 	},
 
 	async getShuffledFlashcardIds() {
-		return await getCurrentState('shuffledIds') || [];
+		return (await getCurrentState('shuffledIds')) || [];
 	},
 
 	setShuffledFlashcardIds(ids) {
 		return setCurrentState('shuffledIds', ids);
-	},
+	}
 };
 
 async function getValuesFromCursor(tx, objectWithCursor, mapper) {

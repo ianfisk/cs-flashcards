@@ -68,17 +68,16 @@
 .hamburger-menu-in {
 	animation-duration: 0.3s;
 	animation-name: showMenu;
-	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	animation-fill-mode: forwards;
 }
 
 .hamburger-menu-out {
 	animation-duration: 0.15s;
 	animation-name: hideMenu;
-	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 	animation-fill-mode: forwards;
 }
-
 
 @keyframes showMenu {
 	0% {

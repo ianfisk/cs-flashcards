@@ -7,7 +7,7 @@ import './styles.css';
 export default class CardList extends PureComponent {
 	static propTypes = {
 		cards: PropTypes.arrayOf(flashcardPropTypes).isRequired,
-		header: PropTypes.string.isRequired,
+		header: PropTypes.string.isRequired
 	};
 
 	render() {
@@ -37,7 +37,7 @@ const CardPreview = ({ card, animationDelayMs }) => {
 		animationDuration: '0.3s',
 		animationName: 'animateListItemIn',
 		animationTimingFunction: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
-		animationFillMode: 'forwards',
+		animationFillMode: 'forwards'
 	};
 
 	return (
