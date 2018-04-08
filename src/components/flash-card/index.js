@@ -23,16 +23,14 @@ export default class Flashcard extends PureComponent {
 		editedContent: '',
 	};
 
-	componentWillReceiveProps(nextProps) {
-		if (this.props.card.id !== nextProps.card.id) {
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.card.id !== this.props.card.id) {
 			this.setState(prevState => ({
-				parsedContent: !this.isAnimatingDuringNavigation ? splitOnNewlines(nextProps.card.back) : prevState.parsedContent,
+				parsedContent: !this.isAnimatingDuringNavigation ? splitOnNewlines(this.props.card.back) : prevState.parsedContent,
 				showAnswer: prevState.showAnswer !== null ? false : null,
 			}));
 		}
-	}
 
-	componentDidUpdate(prevProps, prevState) {
 		if (!prevState.isEditing && this.state.isEditing) {
 			this.editor.focus();
 		} else if (prevState.isEditing && !this.state.isEditing) {
