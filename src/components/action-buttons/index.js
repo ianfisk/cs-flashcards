@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import GoChevronLeft from 'react-icons/lib/go/chevron-left';
 import GoChevronRight from 'react-icons/lib/go/chevron-right';
 import IoArrowSwap from 'react-icons/lib/io/arrow-swap';
+import classNames from 'classnames';
 import Button from '../button';
 import DropdownButton from '../dropdown-button';
 import { flashcardStatus } from '../../constants';
@@ -24,9 +25,17 @@ export default class ActionButtons extends PureComponent {
 		onGoToPreviousCard: PropTypes.func,
 	};
 
-	renderStatusDropdown = () => {
+	renderStatusDropdown = isMovingIn => {
+		const containerClasses = {
+			'status-menu': true,
+			'status-menu-in': isMovingIn,
+			'status-menu-out': this.isShowingMenu && !isMovingIn,
+		};
+
+		this.isShowingMenu = isMovingIn;
+
 		return (
-			<React.Fragment>
+			<div className={classNames(containerClasses)}>
 				{Object.keys(flashcardStatus).map(status =>
 					<Button
 						key={status}
@@ -46,7 +55,7 @@ export default class ActionButtons extends PureComponent {
 				>
 					None
 				</Button>
-			</React.Fragment>
+			</div>
 		);
 	};
 

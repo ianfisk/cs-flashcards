@@ -65,13 +65,12 @@ export default class DropdownButton extends PureComponent {
 				<Button {...buttonProps} className={className} onClick={this.handleClick}>
 					{children}
 				</Button>
-				{showDropdown ?
-					<div
-						className={classNames(dropdownClasses, dropdownContainerClassName)}
-						onClick={() => this.setState({ showDropdown: false })}
-					>
-						{renderDropdownContents()}
-					</div> : null}
+				<div
+					className={classNames(dropdownClasses, dropdownContainerClassName)}
+					onClick={() => this.setState({ showDropdown: false })}
+				>
+					{renderDropdownContents(showDropdown)}
+				</div>
 			</div>
 		);
 	}

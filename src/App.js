@@ -3,6 +3,7 @@ import { HashRouter as Router, Route, Link } from 'react-router-dom';
 import 'materialize-css';
 import { SyncLoader } from 'react-spinners';
 import IoNaviconRound from 'react-icons/lib/io/navicon-round';
+import classNames from 'classnames';
 import Button from './components/button';
 import DropdownButton from './components/dropdown-button';
 import Flashcard from './components/flash-card';
@@ -123,9 +124,17 @@ export default class App extends PureComponent {
 		this.setState({ flashcards: newShuffledCards, currentFlashcard: getNextFlashcard(newShuffledCards, 0) });
 	}
 
-	renderMenu = () => {
+	renderMenu = isMovingIn => {
+		const containerClasses = {
+			'hamburger-menu-animation-container': true,
+			'hamburger-menu-in': isMovingIn,
+			'hamburger-menu-out': this.isShowingMenu && !isMovingIn,
+		};
+
+		this.isShowingMenu = isMovingIn;
+
 		return (
-			<React.Fragment>
+			<div className={classNames(containerClasses)}>
 				<div className="menu-item"><Link to="/">Home</Link></div>
 				<div className="menu-item"><Link to="/known">Known cards</Link></div>
 				<div className="menu-item"><Link to="/unknown">Unknown cards</Link></div>
@@ -136,7 +145,7 @@ export default class App extends PureComponent {
 				<Button className="menu-button" onClick={this.mergeNewCards}>Merge new cards</Button>
 				<Divider />
 				<Button className="red darken-1 refresh-button" onClick={this.handleResetState}>Reset</Button>
-			</React.Fragment>
+			</div>
 		);
 	};
 
