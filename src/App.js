@@ -233,6 +233,7 @@ export default class App extends PureComponent {
 									path={`/${path}`}
 									render={() => (
 										<CardList
+											key={path}
 											header={cardFilters[path].header}
 											cards={cardFilters[path].getCards()}
 										/>

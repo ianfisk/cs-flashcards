@@ -23,6 +23,20 @@
 	font-size: 14px;
 	min-height: 40px;
 	margin-bottom: 8px;
+	opacity: 0;
 	padding: 10px 8px 8px;
+	transform: translateY(10%);
 	width: 85%;
+}
+
+@keyframes animateListItemIn {
+	from {
+		transform: translateY(10%);
+		opacity: 0;
+	}
+
+	to {
+		transform: translateY(0%);
+		opacity: 1;
+	}
 }

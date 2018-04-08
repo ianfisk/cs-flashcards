@@ -17,10 +17,11 @@ export default class CardList extends PureComponent {
 			<div className="card-list">
 				<h3>{header}</h3>
 				<div className="card-list-container">
-					{cards.map(card => (
+					{cards.map((card, i) => (
 						<CardPreview
 							key={card.id}
 							card={card}
+							animationDelayMs={100 + i * 20}
 						/>
 					))}
 				</div>
@@ -29,11 +30,22 @@ export default class CardList extends PureComponent {
 	}
 }
 
-const CardPreview = ({ card }) => {
+const CardPreview = ({ card, animationDelayMs }) => {
 	const { id, front } = card;
+	const animationStyle = {
+		animationDelay: `${animationDelayMs}ms`,
+		animationDuration: '0.3s',
+		animationName: 'animateListItemIn',
+		animationTimingFunction: 'cubic-bezier(0.4, 0.0, 0.2, 1)',
+		animationFillMode: 'forwards',
+	};
 
 	return (
-		<Link to={`/card/${id}`} className="card-preview text-overflow">
+		<Link
+			to={`/card/${id}`}
+			className="card-preview text-overflow"
+			style={animationStyle}
+		>
 			{front}
 		</Link>
 	);
