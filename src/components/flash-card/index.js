@@ -127,8 +127,8 @@ export default class Flashcard extends PureComponent {
 				</div>
 				<ActionButtons
 					cardStatus={status}
-					onGoToNextCard={(...args) => this.handleNavigate(onGoToNextCard, ...args)}
-					onGoToPreviousCard={(...args) => this.handleNavigate(onGoToPreviousCard, ...args)}
+					onGoToNextCard={onGoToNextCard ? (...args) => this.handleNavigate(onGoToNextCard, ...args) : null}
+					onGoToPreviousCard={onGoToPreviousCard ? (...args) => this.handleNavigate(onGoToPreviousCard, ...args) : null}
 					onFlipCard={this.handleFlipCard}
 					updateCardStatus={newStatus => {
 						updateCard({ ...card, status: newStatus });
