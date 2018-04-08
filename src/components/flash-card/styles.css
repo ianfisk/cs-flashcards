@@ -22,9 +22,20 @@
 	word-wrap: break-word;
 }
 
+flashcard-content:active {
+	background: none;
+	background-color: none;
+}
+
+flashcard-content > span:active {
+	background: none;
+}
+
 .editor {
 	border: 1px solid #0079bf;
 	box-shadow: 0 0 2px 0 #0284C6;
+	height: 100%;
+	line-height: 1.5;
 	padding: 12px;
 	resize: none;
 	width: 100%;

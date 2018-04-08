@@ -21,6 +21,10 @@
 	margin: 8px 0;
 }
 
+.hamburger-button {
+	padding: 0 6px;
+}
+
 .menu-button {
 	margin: 4px 0;
 	width: 100%;
@@ -30,10 +34,6 @@
 	position: absolute;
 	right: 30px;
 	top: 24px;
-}
-
-.menu-button {
-	padding: 3px 3px 4px 3px;
 }
 
 .menu-container {

@@ -1,7 +1,9 @@
 import React, { PureComponent } from 'react';
 import { HashRouter as Router, Route, Link } from 'react-router-dom';
+import 'materialize-css';
 import { SyncLoader } from 'react-spinners';
 import IoNaviconRound from 'react-icons/lib/io/navicon-round';
+import Button from './components/button';
 import DropdownButton from './components/dropdown-button';
 import Flashcard from './components/flash-card';
 import Divider from './components/divider';
@@ -130,10 +132,10 @@ export default class App extends PureComponent {
 				<div className="menu-item"><Link to="/reviewSoon">Cards to review</Link></div>
 				<div className="menu-item"><Link to="/hidden">Hidden cards</Link></div>
 				<div className="menu-item"><Link to="/edited">Edited cards</Link></div>
-				<button className="btn btn-primary menu-button" onClick={this.copyAsJson}>Copy cards as JSON</button>
-				<button className="btn btn-primary menu-button" onClick={this.mergeNewCards}>Merge new cards</button>
+				<Button className="menu-button" onClick={this.copyAsJson}>Copy cards as JSON</Button>
+				<Button className="menu-button" onClick={this.mergeNewCards}>Merge new cards</Button>
 				<Divider />
-				<button className="btn btn-danger refresh-button" onClick={this.handleResetState}>Reset</button>
+				<Button className="red darken-1 refresh-button" onClick={this.handleResetState}>Reset</Button>
 			</React.Fragment>
 		);
 	};
@@ -172,12 +174,14 @@ export default class App extends PureComponent {
 						<React.Fragment>
 							<div className="menu-button-container">
 								<DropdownButton
-									className="btn btn-default menu-button"
-									dropdownContainerClassName="menu-container"
+									className="deep-orange darken-2 hamburger-button"
+									dropdownContainerClassName="menu-container z-depth-2 grey lighten-5"
 									renderDropdownContents={this.renderMenu}
 									horizontalPosition="left"
+									floating
+									large
 								>
-									<IoNaviconRound size={30} />
+									<IoNaviconRound size={24} />
 								</DropdownButton>
 							</div>
 							<Route

@@ -13,3 +13,10 @@ export const flashcardPropTypes = PropTypes.shape({
 	back: PropTypes.string.isRequired,
 	status: PropTypes.string,
 }).isRequired;
+
+export const buttonTypes = [
+	'floating',
+	'flat',
+	'large',
+	'small',
+];

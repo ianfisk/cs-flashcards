@@ -10,23 +10,18 @@
 }
 
 .status-button {
-	min-height: 40px;
-	min-width: 110px;
+	min-width: 135px;
 }
 
 .status-dropdown-container {
-	background: white;
-	border: 1px solid lightgray;
-	border-radius: 3px;
-	font-size: 14px;
-	width: 120px;
+	width: 150px;
 }
 
 .status-dropdown-item {
-	padding: 4px 16px;
+	border-radius: 0;
 	width: 100%;
 }
 
-.status-dropdown-item:hover {
-	background: lightgray;
+.icon-button {
+	padding: 0 10px;
 }

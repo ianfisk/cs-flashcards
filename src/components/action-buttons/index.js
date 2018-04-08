@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import GoChevronLeft from 'react-icons/lib/go/chevron-left';
 import GoChevronRight from 'react-icons/lib/go/chevron-right';
 import IoArrowSwap from 'react-icons/lib/io/arrow-swap';
+import Button from '../button';
 import DropdownButton from '../dropdown-button';
 import { flashcardStatus } from '../../constants';
 import './styles.css';
@@ -27,20 +28,22 @@ export default class ActionButtons extends PureComponent {
 		return (
 			<React.Fragment>
 				{Object.keys(flashcardStatus).map(status =>
-					<button
+					<Button
 						key={status}
-						className="btn btn-no-styling status-dropdown-item"
+						className="grey lighten-5 black-text status-dropdown-item"
+						waveColor="teal"
 						onClick={() => this.props.updateCardStatus(status)}
 					>
 						{flashcardStatusLabel[status]}
-					</button>
+					</Button>
 				)}
-				<button
-					className="btn btn-no-styling status-dropdown-item"
+				<Button
+					className="grey lighten-5 black-text status-dropdown-item"
+					waveColor="teal"
 					onClick={() => this.props.updateCardStatus(null)}
 				>
 					None
-				</button>
+				</Button>
 			</React.Fragment>
 		);
 	};
@@ -51,14 +54,14 @@ export default class ActionButtons extends PureComponent {
 		return (
 			<div className="action-button-container">
 				{onGoToPreviousCard ?
-					<button className="btn btn-primary action-button-margin" onClick={onGoToPreviousCard}>
+					<Button className="icon-button action-button-margin" onClick={onGoToPreviousCard}>
 						<GoChevronLeft size={24} />
-					</button> : null}
-				<button className="btn btn-primary action-button-margin" onClick={onFlipCard}>
+					</Button> : null}
+				<Button className="icon-button action-button-margin" onClick={onFlipCard}>
 					<IoArrowSwap size={24} />
-				</button>
+				</Button>
 				<DropdownButton
-					className="btn btn-success action-button-margin status-button"
+					className="action-button-margin status-button"
 					dropdownContainerClassName="status-dropdown-container"
 					renderDropdownContents={this.renderStatusDropdown}
 					verticalPosition="above"
@@ -66,9 +69,9 @@ export default class ActionButtons extends PureComponent {
 					{flashcardStatusLabel[cardStatus] || 'Set status'}
 				</DropdownButton>
 				{onGoToNextCard ?
-					<button className="btn btn-primary action-button-margin" onClick={onGoToNextCard}>
+					<Button className="icon-button action-button-margin" onClick={onGoToNextCard}>
 						<GoChevronRight size={24} />
-					</button> : null}
+					</Button> : null}
 			</div>
 		);
 	}

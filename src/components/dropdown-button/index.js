@@ -1,5 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
+import Button from '../button';
 import './styles.css';
 
 export default class DropdownButton extends PureComponent {
@@ -47,17 +49,25 @@ export default class DropdownButton extends PureComponent {
 			verticalPosition,
 			horizontalPosition,
 			dropdownContainerClassName,
+			buttonType,
+			...buttonProps,
 		} = this.props;
 		const { showDropdown } = this.state;
 
+		const dropdownClasses = {
+			'dropdown-container': true,
+			'dropdown-container-above': verticalPosition === 'above',
+			'dropdown-container-left': horizontalPosition === 'left',
+		};
+
 		return (
 			<div className="dropdown-button-container">
-				<button className={className} onClick={this.handleClick}>
+				<Button {...buttonProps} className={className} onClick={this.handleClick}>
 					{children}
-				</button>
+				</Button>
 				{showDropdown ?
 					<div
-						className={`dropdown-container ${verticalPosition === 'above' ? 'dropdown-container-above' : null} ${horizontalPosition === 'left' ? 'dropdown-container-left' : null} ${dropdownContainerClassName}`}
+						className={classNames(dropdownClasses, dropdownContainerClassName)}
 						onClick={() => this.setState({ showDropdown: false })}
 					>
 						{renderDropdownContents()}
