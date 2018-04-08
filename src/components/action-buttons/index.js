@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import GoArrowLeft from 'react-icons/lib/go/arrow-left';
-import GoArrowRight from 'react-icons/lib/go/arrow-right';
+import GoChevronLeft from 'react-icons/lib/go/chevron-left';
+import GoChevronRight from 'react-icons/lib/go/chevron-right';
 import IoArrowSwap from 'react-icons/lib/io/arrow-swap';
 import DropdownButton from '../dropdown-button';
 import { flashcardStatus } from '../../constants';
@@ -52,7 +52,7 @@ export default class ActionButtons extends PureComponent {
 			<div className="action-button-container">
 				{onGoToPreviousCard ?
 					<button className="btn btn-primary action-button-margin" onClick={onGoToPreviousCard}>
-						<GoArrowLeft size={24} />
+						<GoChevronLeft size={24} />
 					</button> : null}
 				<button className="btn btn-primary action-button-margin" onClick={onFlipCard}>
 					<IoArrowSwap size={24} />
@@ -67,7 +67,7 @@ export default class ActionButtons extends PureComponent {
 				</DropdownButton>
 				{onGoToNextCard ?
 					<button className="btn btn-primary action-button-margin" onClick={onGoToNextCard}>
-						<GoArrowRight size={24} />
+						<GoChevronRight size={24} />
 					</button> : null}
 			</div>
 		);
