@@ -6,6 +6,8 @@ import DoubleTap from '../double-tap';
 import { flashcardPropTypes } from '../../constants';
 import './styles.css';
 
+const cardAnimationDurationMs = 300;
+
 export default class Flashcard extends PureComponent {
 	static propTypes = {
 		card: flashcardPropTypes,
@@ -24,7 +26,7 @@ export default class Flashcard extends PureComponent {
 	componentWillReceiveProps(nextProps) {
 		if (this.props.card.id !== nextProps.card.id) {
 			this.setState(prevState => ({
-				parsedContent: splitOnNewlines(nextProps.card.back),
+				parsedContent: !this.isAnimatingDuringNavigation ? splitOnNewlines(nextProps.card.back) : prevState.parsedContent,
 				showAnswer: prevState.showAnswer !== null ? false : null,
 			}));
 		}
@@ -65,11 +67,15 @@ export default class Flashcard extends PureComponent {
 
 	handleNavigate = (doNavigate, ...args) => {
 		if (this.state.showAnswer) {
-			// wait for the card to slide down before navigating
 			this.setState({ showAnswer: false });
+			doNavigate(...args);
+
+			// wait for the card to slide down before updating the back content
+			this.isAnimatingDuringNavigation = true;
 			this.navigateTimeout = setTimeout(() => {
-				doNavigate(...args);
-			}, 300);
+				this.isAnimatingDuringNavigation = false;
+				this.setState({ parsedContent: splitOnNewlines(this.props.card.back) });
+			}, cardAnimationDurationMs);
 		} else {
 			doNavigate(...args);
 		}
