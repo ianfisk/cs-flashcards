@@ -49,7 +49,6 @@ export default class DropdownButton extends PureComponent {
 			verticalPosition,
 			horizontalPosition,
 			dropdownContainerClassName,
-			buttonType,
 			...buttonProps,
 		} = this.props;
 		const { showDropdown } = this.state;
