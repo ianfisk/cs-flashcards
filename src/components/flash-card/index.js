@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import ActionButtons from '../action-buttons';
 import DoubleTap from '../double-tap';
 import { flashcardPropTypes } from '../../constants';
@@ -15,14 +16,17 @@ export default class Flashcard extends PureComponent {
 
 	state = {
 		parsedContent: splitOnNewlines(this.props.card.back),
-		showAnswer: false,
+		showAnswer: null,
 		isEditing: false,
 		editedContent: '',
 	};
 
 	componentWillReceiveProps(nextProps) {
 		if (this.props.card.id !== nextProps.card.id) {
-			this.setState({ parsedContent: splitOnNewlines(nextProps.card.back), showAnswer: false });
+			this.setState(prevState => ({
+				parsedContent: splitOnNewlines(nextProps.card.back),
+				showAnswer: prevState.showAnswer !== null ? false : null,
+			}));
 		}
 	}
 
@@ -47,6 +51,10 @@ export default class Flashcard extends PureComponent {
 		}
 	}
 
+	componentWillUnmount() {
+		clearTimeout(this.navigateTimeout);
+	}
+
 	handleFlipCard = () => {
 		this.setState(prevState => ({ showAnswer: !prevState.showAnswer }));
 	};
@@ -55,42 +63,72 @@ export default class Flashcard extends PureComponent {
 		this.setState({ editedContent: e.target.value });
 	};
 
+	handleNavigate = (doNavigate, ...args) => {
+		if (this.state.showAnswer) {
+			// wait for the card to slide down before navigating
+			this.setState({ showAnswer: false });
+			this.navigateTimeout = setTimeout(() => {
+				doNavigate(...args);
+			}, 300);
+		} else {
+			doNavigate(...args);
+		}
+	};
+
 	render() {
 		const { card, onGoToNextCard, onGoToPreviousCard, updateCard } = this.props;
 		const { parsedContent, showAnswer, isEditing, editedContent } = this.state;
 		const { front, back, status } = card;
 
+		const cardBackClasses = {
+			'flashcard-back': true,
+			'z-depth-2': showAnswer,
+			'slide-down': showAnswer !== null && !showAnswer,
+			'slide-up': showAnswer,
+		};
+		const cardFrontClasses = {
+			'flashcard-front': true,
+			'show-front-animation': showAnswer !== null && !showAnswer,
+			'hide-front-animation': showAnswer,
+		};
+
 		return (
 			<div className="flashcard-container">
 				<div className="flashcard-content-container">
-					{!isEditing ?
-						<DoubleTap
-							className="flashcard-content"
-							onDoubleTap={() => {
-								this.setState({
-									isEditing: true,
-									editedContent: showAnswer ? back : front,
-								});
-							}}
-						>
-							{showAnswer ? parsedContent.map((line, i) => <span key={i}>{line}<br /></span>) : front}
-						</DoubleTap> :
-						<textarea
-							className="editor"
-							ref={e => {
-								this.editor = e;
-							}}
-							value={editedContent}
-							onChange={this.handleEditCard}
-							onBlur={() => {
-								this.setState({ isEditing: false });
-							}}
-						/>}
+					<DoubleTap
+						onDoubleTap={() => {
+							this.setState({
+								isEditing: true,
+								editedContent: showAnswer ? back : front,
+							});
+						}}
+					>
+						<div className={classNames(cardFrontClasses)}>
+							<span className="flashcard-content">{front}</span>
+						</div>
+						<div className={classNames(cardBackClasses)}>
+							<span className="flashcard-content">
+								{parsedContent.map((line, i) => <span key={i}>{line}<br /></span>)}
+							</span>
+						</div>
+					</DoubleTap>
+					<textarea
+						className="editor"
+						style={{ display: isEditing ? 'block' : 'none' }}
+						ref={e => {
+							this.editor = e;
+						}}
+						value={editedContent}
+						onChange={this.handleEditCard}
+						onBlur={() => {
+							this.setState({ isEditing: false });
+						}}
+					/>
 				</div>
 				<ActionButtons
 					cardStatus={status}
-					onGoToNextCard={onGoToNextCard}
-					onGoToPreviousCard={onGoToPreviousCard}
+					onGoToNextCard={(...args) => this.handleNavigate(onGoToNextCard, ...args)}
+					onGoToPreviousCard={(...args) => this.handleNavigate(onGoToPreviousCard, ...args)}
 					onFlipCard={this.handleFlipCard}
 					updateCardStatus={newStatus => {
 						updateCard({ ...card, status: newStatus });

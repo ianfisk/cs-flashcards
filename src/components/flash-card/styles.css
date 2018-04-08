@@ -8,11 +8,25 @@
 .flashcard-content-container {
 	border: 1px solid lightgray;
 	border-radius: 6px;
-	display: flex;
 	height: 340px;
 	margin-bottom: 12px;
-	overflow: scroll;
+	overflow: hidden;
+	position: relative;
 	width: 85%;
+}
+
+.flashcard-front {
+	display: flex;
+	height: 100%;
+	overflow: scroll;
+}
+
+.flashcard-back {
+	background: white;
+	display: flex;
+	height: 100%;
+	overflow: scroll;
+	transform: translateY(0%);
 }
 
 .flashcard-content {
@@ -32,12 +46,92 @@ flashcard-content > span:active {
 }
 
 .editor {
+	background: white;
 	border: 1px solid #0079bf;
 	box-shadow: 0 0 2px 0 #0284C6;
 	height: 100%;
+	left: 0;
 	line-height: 1.5;
 	padding: 12px;
+	position: absolute;
 	resize: none;
+	top: 0;
 	width: 100%;
 	word-wrap: break-word;
+}
+
+.slide-down {
+	animation-duration: 0.3s;
+	animation-name: slideDown;
+	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-fill-mode: forwards;
+}
+
+.slide-up {
+	animation-duration: 0.3s;
+	animation-name: slideUp;
+	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-fill-mode: forwards;
+}
+
+.show-front-animation {
+	animation-duration: 0.3s;
+	animation-name: showFront;
+	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-fill-mode: forwards;
+}
+
+.hide-front-animation {
+	animation-duration: 0.3s;
+	animation-name: hideFront;
+	animation-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
+	animation-fill-mode: forwards;
+}
+
+@keyframes slideDown {
+	from {
+		transform: translateY(-100%);
+	}
+
+	to {
+		transform: translateY(0%);
+	}
+}
+
+@keyframes slideUp {
+	from {
+		transform: translateY(0%);
+	}
+
+	to {
+		transform: translateY(-100%);
+	}
+}
+
+@keyframes showFront {
+	from {
+		transform: translateY(-20%);
+		opacity: 0.5;
+		background: #e0e0e0;
+	}
+
+	to {
+		transform: translateY(0%);
+		opacity: 1;
+		background: white;
+	}
+}
+
+@keyframes hideFront {
+	from {
+		transform: translateY(0%);
+		opacity: 1;
+		background: white;
+	}
+
+	to {
+		transform: translateY(-20%);
+		opacity: 0.5;
+		background: #e0e0e0;
+	}
 }
