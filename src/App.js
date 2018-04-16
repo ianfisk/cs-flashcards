@@ -122,13 +122,15 @@ export default class App extends PureComponent {
 	};
 
 	copyAsJson = () => {
-		const mappedCards = this.state.flashcards.map(x => {
-			const mappedCard = { ...x };
+		const mappedCards = this.state.flashcards
+			.map(x => {
+				const mappedCard = { ...x };
 
-			delete mappedCard.isEdited;
-			delete mappedCard.status;
-			return mappedCard;
-		});
+				delete mappedCard.isEdited;
+				delete mappedCard.status;
+				return mappedCard;
+			})
+			.sort((a, b) => a.id - b.id);
 
 		copyToClipboard(JSON.stringify(mappedCards));
 	};
