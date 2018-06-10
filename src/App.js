@@ -44,7 +44,7 @@ export default class App extends PureComponent {
 
 		const shuffledFlashcards =
 			shuffledFlashcardIds.length && savedFlashcards.length
-				? shuffleSavedFlashcards(savedFlashcards, shuffledFlashcardIds)
+				? orderSavedFlashcards(savedFlashcards, shuffledFlashcardIds)
 				: await getAndSaveFlashcards();
 
 		const indexOfCurrentFlashcard = shuffledFlashcards.findIndex(
@@ -304,7 +304,7 @@ export default class App extends PureComponent {
 	}
 }
 
-function shuffleSavedFlashcards(savedFlashcards, shuffledFlashcardIds) {
+function orderSavedFlashcards(savedFlashcards, shuffledFlashcardIds) {
 	const savedFlashcardsMap = savedFlashcards.reduce((map, card) => {
 		map[card.id] = card;
 		return map;
